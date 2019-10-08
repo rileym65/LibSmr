@@ -1,0 +1,40 @@
+extern int goodTests;
+extern int badTests;
+
+extern void Good(const char* message);
+extern void Bad(const char* message);
+
+extern void TestArray();
+extern void TestBase64();
+extern void TestCallback();
+extern void TestConvert();
+extern void TestDateTime();
+extern void TestDictionary();
+extern void TestDirectory();
+extern void TestFile();
+extern void TestFileInfo();
+extern void TestForth();
+extern void TestForthContext();
+extern void TestFraction();
+extern void TestHash();
+extern void TestHexGrid();
+extern void TestLexer();
+extern void TestLine();
+extern void TestList();
+extern void TestMath();
+extern void TestObject();
+extern void TestQueue();
+extern void TestParser();
+extern void TestRandom();
+extern void TestRegEx();
+extern void TestSet();
+extern void TestStack();
+extern void TestStreamReader();
+extern void TestString();
+extern void TestSystem();
+extern void TestTests();
+extern void TestTimeSpan();
+extern void TestVector();
+extern void TestStopWatch();
+extern void TestUtils();
+

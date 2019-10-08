@@ -1,0 +1,111 @@
+<html>
+  <head>
+  </head>
+
+  <body bgcolor=white text=black>
+
+    <h3>Object</h3>
+    <p>
+    <b>Inherits from:</b> None
+    <p>
+
+    <b>Constructors:</b><br>
+    <table border=1 cellpadding=5>
+      <tr>
+        <td>Object()</td>
+        <td>Basic constructor</td>
+      </tr>
+    </table>
+
+    <p>
+
+    <b>Methods:</b><br>
+    <table border=1 cellpadding=5>
+      <tr>
+        <td>char*</td>
+        <td><a href="#AsCharArray">AsCharArray()</a></td>
+        <td>Object type</td>
+      </tr>
+      <tr>
+        <td>Boolean</td>
+        <td><a href="#Equals">Equals(Object* b)</a></td>
+        <td>Check if equal to another Object</td>
+      </tr>
+      <tr>
+        <td>char*</td>
+        <td><a href="#ToCharArray">ToCharArray()</a></td>
+        <td>Object type</td>
+      </tr>
+      <tr>
+        <td>char*</td>
+        <td><a href="#Type">Type()</a></td>
+        <td>Object type</td>
+      </tr>
+    </table>
+   
+    <p>
+    <hr>
+    <p>
+    <a name="AsCharArray"></a>
+    <b>char* AsCharArray()</b>
+    <p>
+    <b>Function:</b> Returns character array of object's type
+    <p>
+    <b>Notes:</b>
+    <ul>
+      <li>This returns a pointer to the object type within the object.  The memory
+          for this is owned by the object and therefore free() should not be used
+          on the return value.
+    </ul>
+   
+    <p>
+    <hr>
+    <p>
+    <a name="Equals"></a>
+    <b>char* Equals(Object* b)</b>
+    <p>
+    <b>Arguments:</b>
+    <br>
+    &nbsp; &nbsp; &nbsp; &nbsp; b - Reference to an object to compare
+    <p>
+    <b>Function:</b> Returns true if 'b' is the same object
+    <p>
+    <b>Notes:</b>
+    <ul>
+      <li>This returns true if the object pointed to by 'b' is the same as the
+          current object.
+    </ul>
+   
+    <p>
+    <hr>
+    <p>
+    <a name="ToCharArray"></a>
+    <b>char* ToCharArray()</b>
+    <p>
+    <b>Function:</b> Returns character array of object's type
+    <p>
+    <b>Notes:</b>
+    <ul>
+      <li>This function returns a new memory object with a copy of the object's type.
+          The return value of this function is created by malloc() and therefore you
+          should use free() once this value is no longer needed.
+    </ul>
+   
+    <p>
+    <hr>
+    <p>
+    <a name="Type"></a>
+    <b>char* Type()</b>
+    <p>
+    <b>Function:</b> Returns character array of object's type
+    <p>
+    <b>Notes:</b>
+    <ul>
+      <li>This returns a pointer to the object type within the object.  The memory
+          for this is owned by the object and therefore free() should not be used
+          on the return value.
+    </ul>
+
+  </body>
+</html>
+

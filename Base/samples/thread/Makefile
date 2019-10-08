@@ -1,0 +1,26 @@
+PROJECT = test
+CC = g++
+DEFS =
+INCDIR =
+INCS =
+LIBDIR =
+LIBS = -lSmrFramework
+DEFS = -pthread -std=c++11
+HEADERS = header.h
+OBJS = \
+	Main.o
+
+$(PROJECT): $(OBJS)
+	$(CC) $(DEFS) $(LIBDIR) $(OBJS) $(LIBS) -o $(PROJECT)
+
+.c.o:
+	$(CC) $(DEFS) $(INCDIR) $(INCS) -c $<
+
+.cpp.o:
+	$(CC) $(DEFS) $(INCDIR) $(INCS) -c $<
+
+clean:
+	-rm $(PROJECT)
+	-rm *.o
+
+Main.o:             $(HEADERS) Main.cpp

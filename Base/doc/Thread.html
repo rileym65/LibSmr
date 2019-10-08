@@ -1,0 +1,147 @@
+<html>
+  <head>
+  </head>
+
+  <body bgcolor=white text=black>
+
+    <h3>Thread</h3>
+    <p>
+    <b>Inherits from:</b><br>
+    &nbsp; &nbsp; <a href="Object.html">Object</a>
+    <p>
+
+    <b>Constructors:</b><br>
+    <table border=1 cellpadding=5>
+      <tr>
+        <td>Thread()</td>
+        <td>Basic constructor</td>
+      </tr>
+    </table>
+
+    <p>
+
+    <b>Methods:</b><br>
+    <table border=1 cellpadding=5>
+      <tr>
+        <td>Int32</td>
+        <td><a href="#Start">Start(void* arg)</a></td>
+        <td>Start thread</td>
+      </tr>
+      <tr>
+        <td>void</td>
+        <td><a href="#Terminate">Terminate()</a></td>
+        <td>Ask thread to terminate</td>
+      </tr>
+      <tr>
+        <td>pthread_t</td>
+        <td><a href="#ThreadId">ThreadId()</a></td>
+        <td>Thread identifier</td>
+      </tr>
+    </table>
+   
+    <p>
+    <hr>
+    <p>
+    <b>Sample:</b><br>
+    <pre>
+#include &lt;SmrFramework.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;stdlib.h&gt;
+
+using namespace SmrFramework;
+
+int shared;
+bool done[2];
+
+class MyThread : public Thread {
+  public:
+    virtual void execute(void* arg);
+  };
+
+void MyThread::execute(void* arg) {
+  int i;
+  int id;
+  id = *((int*)arg);
+  sleep(1);
+  printf("Starting thread\n");
+  for (i=0; i&lt;10; i++) {
+    printf("%d: %d: %d\n",shared,id,i);
+    sleep(1);
+    }
+  done[id-1] = true;
+  }
+
+int main(int argc, char** argv) {
+  int id1;
+  int id2;
+  shared = 456;
+  MyThread* th1;
+  MyThread* th2;
+  printf("Starting\n");
+  id1 = 1;
+  id2 = 2;
+  done[0] = false;
+  done[1] = false;
+  th1 = new MyThread();
+  th2 = new MyThread();
+  th1-&gt;Start(&id1);
+  usleep(500000);
+  th2-&gt;Start(&id2);
+  printf("Thread 1 id: %x\n",th1-&gt;ThreadId());
+  printf("Thread 2 id: %x\n",th2-&gt;ThreadId());
+  while (!done[0] || !done[1]) ;
+  }
+
+
+    </pre>
+   
+    <p>
+    <hr>
+    <p>
+    <a name="Start"></a>
+    <b>Int32 Start(void* arg)</b>
+    <p>
+    <b>Arguments:</b>
+    <br>
+    &nbsp; &nbsp; &nbsp; &nbsp; arg - Argument to be passed to execute method
+    <p>
+    <b>Function:</b> Returns 0 on success
+    <p>
+    <b>Notes:</b>
+    <ul>
+      <li>If the thread is successfully started in the operating system, then the
+          objects setup() will be called followed by the execute() method.
+    </ul>
+   
+    <p>
+    <hr>
+    <p>
+    <a name="Terminate"></a>
+    <b>void Terminate()</b>
+    <p>
+    <b>Arguments: None</b>
+    <p>
+    <b>Function:</b><br>
+    This function sets the private variable 'terminate' to true.  It does not actually
+    terminate the thread.  It is up to the thread code to look at this flag from time
+    to time and when it finds the flag true, the code should take whatever steps it 
+    needs to to shutdown the thread.
+    <p>
+   
+    <p>
+    <hr>
+    <p>
+    <a name="ThreadId"></a>
+    <b>pthread_t ThreadId()</b>
+    <p>
+    <b>Arguments: None</b>
+    <p>
+    <b>Function:</b><br>
+    This function returns the operating system's id for the thread.
+    <p>
+   
+
+  </body>
+</html>
+

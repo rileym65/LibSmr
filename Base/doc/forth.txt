@@ -1,0 +1,94 @@
+:
+;
+.
+!
+@
++
+-
+*
+/
+=
+<>
+>
+<
+>=
+<=
+=0
+>0
+<0
+{
+}
++!
+-!
+-?0
+1+
+1-
+abs
+and
+aug
+begin
+bl
+clear
+clearto
+depth
+dim
+do
+drop
+dup
+?dup
+else
+emit
+end
+false
+host
+i
+if
+invert
+left
+len
+loop
++loop
++max
+-max
+mid
++min
+-min
+ndrop
+neg
+nip
+not
+or
+over
+pick
+r>
+>r
+repeat
+right
+rot
+-rot
+s.
+sdrop
+sdup
+sgn
+swap
+then
+true
+tuck
+until
+while
+xor
+"..."
+
+
+Notes:
+: and ; must be in a single parse action.  The parse function will place the
+defined function into the custom functions array in the Forth object.  The
+returned ForthProgram object is the reference to the custom function itself
+and should not be deleted, this object is owned by the Forth object and will
+be deleted when the Forth object is destructed.  Exec can be called on this
+ForthObject should you desire to execute the custom function outside the
+Forth environment.
+
+: and ; for custom function defintion must not be included in any other code
+passed into the parse function.
+

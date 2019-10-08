@@ -1,0 +1,129 @@
+PROJECT = libSmrFramework.so.1
+CC = g++
+LIBPATH = ./
+LIBS =
+INCPATH = -I.
+INCS =
+DEFS =
+HEADERS = SmrFramework.h SmrList.h SmrSet.h SmrStack.h
+OBJS = \
+	Application.o \
+	Boolean.o \
+	Button.o \
+	CastException.o \
+	CheckBox.o \
+	Color.o \
+	ComplexNumber.o \
+	Component.o \
+	Control.o \
+	Convert.o \
+	DateTime.o \
+	Directory.o \
+	EventHandler.o \
+	Exception.o \
+	FileInfo.o \
+	Form.o \
+	FormatException.o \
+	Graphics.o \
+	GroupBox.o \
+	HScrollBar.o \
+	InvalidOpException.o \
+	KeyEventArgs.o \
+	Label.o \
+	Lfsr.o \
+	Line.o \
+	ListBox.o \
+	Log.o \
+	Math.o \
+	MouseEventArgs.o \
+	NullException.o \
+	Object.o \
+	PaintEventArgs.o \
+	Panel.o \
+	Point.o \
+	RadioButton.o \
+	Random.o \
+	RangeException.o \
+	Rectangle.o \
+	ScrollBar.o \
+	Spinner.o \
+	Stream.o \
+	StreamWriter.o \
+	String.o \
+	System.o \
+	Tests.o \
+	TimeSpan.o \
+	Toggle.o \
+	ValueEventArgs.o \
+	Vector.o \
+	VScrollBar.o
+
+LIBCMD = $(CC) -shared -Xlinker -h -Xlinker $(PROJECT) $(OBJS) -o $(PROJECT)
+
+$(PROJECT): $(OBJS)
+	-rm $(PROJECT)
+	$(LIBCMD)
+
+.cpp.o:
+	$(CC) $(DEFS) $(INCPATH) $(INCS) -c $<
+
+clean:
+	-rm $(PROJECT)
+	-rm *.o
+
+install:
+	cp $(PROJECT) /usr/lib
+	cp Smr*.h /usr/include
+	chmod a+r /usr/lib/$(PROJECT)
+	chmod a+r /usr/include/SmrFramework.h
+
+Application.o:         $(HEADERS) Application.cpp
+Button.o:              $(HEADERS) Button.cpp
+CastException.o:       $(HEADERS) CastException.cpp
+CheckBox.o:            $(HEADERS) CheckBox.cpp
+Color.o:               $(HEADERS) Color.cpp
+ComplexNumber.o:       $(HEADERS) ComplexNumber.cpp
+Component.o:           $(HEADERS) Component.cpp
+Control.o:             $(HEADERS) Control.cpp
+Convert.o:             $(HEADERS) Convert.cpp
+DateTime.o:            $(HEADERS) DateTime.cpp
+Directory.o:           $(HEADERS) Directory.cpp
+Eventhandler.o:        $(HEADERS) EventHandler.cpp
+Exception.o:           $(HEADERS) Exception.cpp
+FileInfo.o:            $(HEADERS) FileInfo.cpp
+Form.o:                $(HEADERS) Form.cpp
+FormatException.o:     $(HEADERS) FormatException.cpp
+Graphics.o:            $(HEADERS) Graphics.cpp
+GroupBox.o:            $(HEADERS) GroupBox.cpp
+HScrollBar.o:          $(HEADERS) HScrollBar.cpp
+InvalidOpException.o:  $(HEADERS) InvalidOpException.cpp
+KeyEventArgs.o:        $(HEADERS) KeyEventArgs.cpp
+Label.o:               $(HEADERS) Label.cpp
+Lfsr.o:                $(HEADERS) Lfsr.cpp
+Line.o:                $(HEADERS) Line.cpp
+ListBox.o:             $(HEADERS) ListBox.cpp
+Log.o:                 $(HEADERS) Log.cpp
+Math.o:                $(HEADERS) Math.cpp
+MouseEventArgs.o:      $(HEADERS) MouseEventArgs.cpp
+NullException.o:       $(HEADERS) NullException.cpp
+Object.o:              $(HEADERS) Object.cpp
+PaintEventArgs.o:      $(HEADERS) PaintEventArgs.cpp
+Panel.o:               $(HEADERS) Panel.cpp
+Point.o:               $(HEADERS) Point.cpp
+RadioButton.o:         $(HEADERS) RadioButton.cpp
+Random.o:              $(HEADERS) Random.cpp
+RangeException.o:      $(HEADERS) RangeException.cpp
+Rectangle.o:           $(HEADERS) Rectangle.cpp
+ScrollBar.o:           $(HEADERS) ScrollBar.cpp
+Spinner.o:             $(HEADERS) Spinner.cpp
+Stream.o:              $(HEADERS) Stream.cpp
+StreamWriter.o:        $(HEADERS) StreamWriter.cpp
+String.o:              $(HEADERS) String.cpp
+System.o:              $(HEADERS) System.cpp
+Tests.o:               $(HEADERS) Tests.cpp
+TimeSpan.o:            $(HEADERS) TimeSpan.cpp
+Toggle.o:              $(HEADERS) Toggle.cpp
+ValueEventArgs.o:      $(HEADERS) ValueEventArgs.cpp
+Vector.o:              $(HEADERS) Vector.cpp
+VScrollBar.o:          $(HEADERS) VScrollBar.cpp
+
