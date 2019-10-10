@@ -2380,12 +2380,12 @@ namespace SmrFramework {
 
   Boolean Convert::ToBoolean(const char* value) {
     if (value == NULL) throw NullException(NULL, "Value is null");
-    if (strcasecmp(value, "yes")) return true;
-    if (strcasecmp(value, "no")) return false;
-    if (strcasecmp(value, "true")) return true;
-    if (strcasecmp(value, "false")) return false;
-    if (strcasecmp(value, "1")) return true;
-    if (strcasecmp(value, "0")) return false;
+    if (strcasecmp(value, "yes") == 0) return true;
+    if (strcasecmp(value, "no") == 0) return false;
+    if (strcasecmp(value, "true") == 0) return true;
+    if (strcasecmp(value, "false") == 0) return false;
+    if (strcasecmp(value, "1") == 0) return true;
+    if (strcasecmp(value, "0") == 0) return false;
     throw InvalidOpException("Passed value could not be evaluated as a boolean");
     }
 
