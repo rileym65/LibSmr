@@ -98,6 +98,7 @@ namespace SmrFramework {
 
   Int32 Label::TextOffsetX(Int32 i) {
     textOffsetX = i;
+    Redraw();
     return textOffsetX;
     }
 
@@ -107,6 +108,7 @@ namespace SmrFramework {
 
   Int32 Label::TextOffsetY(Int32 i) {
     textOffsetY = i;
+    Redraw();
     return textOffsetY;
     }
 
