@@ -85,7 +85,10 @@ button1->BorderWidth(0);
   checkbox1->Text("Checkbox 1");
   this->Add(checkbox1);
 
-  this->Add(new Label(this, 300, 10, 75, 25, "Test Label"));
+  testLabel = new Label(this, 300, 10, 75, 25, "Test Label");
+  testLabel->BackgroundColor(0xffff, 0x0000, 0x0000);
+  this->Add(testLabel);
+
   radio1 = new RadioButton(this, 200, 440, 100, 25);
   radio1->Visible(true);
   radio1->Text("Radio 1");

@@ -53,6 +53,7 @@ class MainWindow : public Form {
     DropDownList *dropDown;
     TextBox      *textBox;
     Timer        *timer;
+    Label        *testLabel;
     void OnMouseDownEvent(void* sender, MouseEventArgs args);
     void OnMouseMoveEvent(void* sender, MouseEventArgs args);
     void OnMouseUpEvent(void* sender, MouseEventArgs args);

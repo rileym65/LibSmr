@@ -94,6 +94,7 @@ void MainWindow::ButtonPressEvent(void* sender, MouseEventArgs args) {
     timer->Start();
     pictureButton->Enabled(false);
     button2->Font("Roboto-14");
+    testLabel->Enabled(false);
     }
   }
 
@@ -129,6 +130,7 @@ void MainWindow::ButtonReleaseEvent(void* sender, MouseEventArgs args) {
     timer->Stop();
     pictureButton->Enabled(true);
     button2->Font("Roboto-12");
+    testLabel->Enabled(true);
     }
   if (sender == button1) {
     Graphics* g;
