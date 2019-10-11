@@ -87,6 +87,8 @@ button1->BorderWidth(0);
 
   testLabel = new Label(this, 300, 10, 75, 25, "Test Label");
   testLabel->BackgroundColor(0xffff, 0x0000, 0x0000);
+  testLabel->TextOffsetX(-5);
+  testLabel->TextOffsetY(-5);
   this->Add(testLabel);
 
   radio1 = new RadioButton(this, 200, 440, 100, 25);

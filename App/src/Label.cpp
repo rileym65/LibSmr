@@ -22,6 +22,8 @@ namespace SmrFramework {
     XSetWindowBorderWidth(display, window, 0);
     this->borderWidth = 0;
     this->objectType = (char*)"Label";
+    this->textOffsetX = 0;
+    this->textOffsetY = 0;
     Control::Text(text);
     if (parent != NULL) BackgroundColor(parent->BackgroundColor());
     Visible(true);
@@ -63,7 +65,7 @@ namespace SmrFramework {
         xoffset = 5;
       if (align == RIGHT)
         xoffset = (width - ginfo.width) - 5;
-      XftDrawString8(xftdrawable, &xftcolor, xftfont, ginfo.x+xoffset,ginfo.y+yoffset,
+      XftDrawString8(xftdrawable, &xftcolor, xftfont, ginfo.x+xoffset+textOffsetX,ginfo.y+yoffset+textOffsetY,
                     (const FcChar8*)text.AsCharArray(),text.Length());
       
   #else
@@ -83,11 +85,29 @@ namespace SmrFramework {
         xoffset = 5;
       if (align == RIGHT)
         xoffset = (width - XTextWidth(font, text.AsCharArray(), text.Length())) - 5;
-      XDrawString(display,window,gc, xoffset,height-yoffset,text.AsCharArray(),text.Length());
+      XDrawString(display,window,gc, xoffset+textOffsetX,height-yoffset+textOffsetY,text.AsCharArray(),text.Length());
       XFreeGC(display, gc);
       XFreeFont(display, font);
 #endif
       }
+    }
+
+  Int32 Label::TextOffsetX() {
+    return textOffsetX;
+    }
+
+  Int32 Label::TextOffsetX(Int32 i) {
+    textOffsetX = i;
+    return textOffsetX;
+    }
+
+  Int32 Label::TextOffsetY() {
+    return textOffsetY;
+    }
+
+  Int32 Label::TextOffsetY(Int32 i) {
+    textOffsetY = i;
+    return textOffsetY;
     }
 
   } 

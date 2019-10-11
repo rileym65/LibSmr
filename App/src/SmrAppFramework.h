@@ -556,6 +556,8 @@ class Control;
   class Label : public Control {
     protected:
       Byte align;
+      Int32 textOffsetX;
+      Int32 textOffsetY;
     public:
       static const int LEFT = 0;
       static const int CENTER = 1;
@@ -565,6 +567,10 @@ class Control;
       virtual Byte Align();
       virtual Byte Align(Byte b);
       virtual void Redraw();
+      virtual Int32 TextOffsetX();
+      virtual Int32 TextOffsetX(Int32 i);
+      virtual Int32 TextOffsetY();
+      virtual Int32 TextOffsetY(Int32 i);
     };
 
   class TextBox : public Label {
