@@ -1,0 +1,6 @@
+libSmrAppFramework.so.1
+libSmrFramework.so.1
+App/sample/test
+Base/tests/test
+*.log
+*.o
