@@ -10,14 +10,18 @@
 
 
 #include <time.h>
+#include <sys/time.h>
 #include <stdio.h>
 #include "SmrFramework.h"
 
 namespace SmrFramework {
 
   DateTime::DateTime() {
+    struct timeval tv;
     this->objectType = (char*)"DateTime";
     epochSeconds = time(NULL);
+    gettimeofday(&tv, NULL);
+    this->microsecond= (int)tv.tv_usec;
     timeMode = 'L';
     setupTime();
     }
@@ -46,6 +50,7 @@ namespace SmrFramework {
     epochSeconds = mktime(&time);
     timeMode = 'L';
     setupTime();
+    microsecond = 0;
     }
 
   DateTime::~DateTime() {
@@ -219,6 +224,7 @@ namespace SmrFramework {
     this->second = dt.second;
     this->epochSeconds = dt.epochSeconds;
     this->timeMode = dt.timeMode;
+    this->microsecond = dt.microsecond;
     }
 
   Boolean DateTime::operator == (const DateTime &dt) {
@@ -228,6 +234,7 @@ namespace SmrFramework {
     if (this->hour != dt.hour) return false;
     if (this->minute != dt.minute) return false;
     if (this->second != dt.second) return false;
+    if (this->microsecond != dt.microsecond) return false;
     return true;
     }
 
@@ -238,6 +245,7 @@ namespace SmrFramework {
     if (this->hour != dt.hour) return true;
     if (this->minute != dt.minute) return true;
     if (this->second != dt.second) return true;
+    if (this->microsecond != dt.microsecond) return true;
     return false;
     }
 
@@ -254,6 +262,8 @@ namespace SmrFramework {
     if (this->minute > dt.minute) return true;
     if (this->second < dt.second) return false;
     if (this->second > dt.second) return true;
+    if (this->microsecond < dt.microsecond) return false;
+    if (this->microsecond > dt.microsecond) return true;
     return false;
     }
 
@@ -270,6 +280,8 @@ namespace SmrFramework {
     if (this->minute > dt.minute) return true;
     if (this->second < dt.second) return false;
     if (this->second > dt.second) return true;
+    if (this->microsecond < dt.microsecond) return false;
+    if (this->microsecond > dt.microsecond) return true;
     return true;
     }
 
@@ -286,6 +298,8 @@ namespace SmrFramework {
     if (this->minute < dt.minute) return true;
     if (this->second > dt.second) return false;
     if (this->second < dt.second) return true;
+    if (this->microsecond > dt.microsecond) return false;
+    if (this->microsecond < dt.microsecond) return true;
     return false;
     }
 
@@ -302,6 +316,8 @@ namespace SmrFramework {
     if (this->minute < dt.minute) return true;
     if (this->second > dt.second) return false;
     if (this->second < dt.second) return true;
+    if (this->microsecond > dt.microsecond) return false;
+    if (this->microsecond < dt.microsecond) return true;
     return true;
     }
 
@@ -415,6 +431,10 @@ namespace SmrFramework {
     return this->hour;
     }
 
+  int DateTime::MicroSecond() {
+    return this->microsecond;
+    }
+
   int DateTime::Minute() {
     return this->minute;
     }
@@ -507,6 +527,7 @@ namespace SmrFramework {
   double DateTime::ToDouble() {
     double seconds;
     seconds = (this->minute * 60) + (this->hour * 3600) + this->second;
+    seconds += ((Double)microsecond / 1000000.0);
     seconds /= 86400.0;
     return ToJulianDay() + seconds;
     }

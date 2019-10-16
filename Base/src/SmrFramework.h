@@ -605,12 +605,14 @@ namespace SmrFramework {
   class DateTime : public Object {
     protected:
       char timeMode;
+      int xyz;
       int month;
       int day;
       int year;
       int hour;
       int minute;
       int second;
+      int microsecond;
       time_t epochSeconds;
       void setupTime();
       void _convertFromString(const char* dt);
@@ -647,6 +649,7 @@ namespace SmrFramework {
       virtual int       Day();
       virtual int       Equals(DateTime* b);
       virtual int       Hour();
+      virtual int       MicroSecond();
       virtual int       Minute();
       virtual int       Month();
       virtual void      Normalize(int* month,int* day,int* year,int* hr,int* min,int* sec);
