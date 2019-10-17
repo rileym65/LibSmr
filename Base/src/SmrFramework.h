@@ -602,6 +602,26 @@ namespace SmrFramework {
       virtual String     ToString();
     };
 
+  class HrTimer : public Object {
+    protected:
+      UInt64  seconds;
+      UInt32  microSeconds;
+      UInt64  lapSeconds;
+      UInt32  lapMicroSeconds;
+      Boolean running;
+    public:
+      HrTimer();
+      virtual ~HrTimer();
+      virtual UInt64  Microseconds();
+      virtual UInt64  Milliseconds();
+      virtual void    Restart();
+      virtual Boolean Running();
+      virtual UInt64  Seconds();
+      virtual void    Start();
+      virtual void    Stop();
+      virtual Double  ToDouble();
+    };
+
   class DateTime : public Object {
     protected:
       char timeMode;

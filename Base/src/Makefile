@@ -37,6 +37,7 @@ OBJS = \
 	GridObject.o \
 	Hash.o \
 	HexGrid.o \
+	HrTimer.o \
 	Huffman.o \
 	Image.o \
 	ImageBMP.o \
@@ -151,6 +152,7 @@ Fraction.o:            $(HEADERS) Fraction.cpp
 GridObject.o:          $(HEADERS) GridObject.cpp
 Hash.o:                $(HEADERS) Hash.cpp
 HexGrid.o:             $(HEADERS) HexGrid.cpp
+HrTimer.o:             $(HEADERS) HrTimer.cpp
 Huffman.o:             $(HEADERS) Huffman.cpp
 Image.o:               $(HEADERS) Image.cpp
 ImageBMP.o:            $(HEADERS) ImageBMP.cpp
