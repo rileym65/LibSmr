@@ -29,7 +29,25 @@ namespace SmrFramework {
     }
     
   void Toggle::MouseUpEvent(int x, int y, int button) {
+    XSetWindowAttributes attr;
+    unsigned long mask;
     pressed = (pressed) ? 0 : -1;
+    if (pressed) {
+      if (pressedImage != NULL) {
+        mask = CWBackPixmap;
+        attr.background_pixmap = pressedPixmap;
+        XChangeWindowAttributes(display, window, mask, &attr);
+        XClearWindow(display, window);
+        }
+      }
+    else {
+      if (backgroundImage != NULL) {
+        mask = CWBackPixmap;
+        attr.background_pixmap = backgroundPixmap;
+        XChangeWindowAttributes(display, window, mask, &attr);
+        XClearWindow(display, window);
+        }
+      }
     Redraw();
     XFlush(display);
     Control::MouseUpEvent(x, y, button);

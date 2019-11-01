@@ -49,6 +49,7 @@ namespace SmrFramework {
 
   Boolean CheckBox::Checked(Boolean checked) {
     changeCheck(checked);
+    this->Redraw();
     return this->checked;
     }
 
