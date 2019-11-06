@@ -365,7 +365,6 @@ namespace SmrFramework {
     if (state) XMapWindow(display, window);
       else XUnmapWindow(display, window);
     this->Location(this->x, this->y);
-    if (state) this->Redraw();
     XFlush(display);
     return visible;
     }
