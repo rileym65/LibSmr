@@ -170,6 +170,10 @@ namespace SmrFramework {
 #endif
     }
 
+  Boolean Button::Visible() {
+    return Control::Visible();
+    }
+
   Boolean Button::Visible(Boolean state) {
     this->pressed = 0;
     return Control::Visible(state);

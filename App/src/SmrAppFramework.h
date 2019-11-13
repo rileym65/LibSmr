@@ -681,6 +681,7 @@ class Control;
       virtual void MouseDownEvent(int x, int y, int button);
       virtual void MouseUpEvent(int x, int y, int button);
       virtual void Redraw();
+      virtual Boolean   Visible();
       virtual Boolean   Visible(Boolean state);
     };
   
