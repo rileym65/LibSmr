@@ -387,6 +387,7 @@ namespace SmrFramework {
     UInt32 len;
     Boolean flag;
     len = strlen(s);
+    if (len > length) return 0;
     for (i=0; i<length-len; i++) {
       flag = true;
       for (j=0; j<len; j++)
