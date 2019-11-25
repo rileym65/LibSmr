@@ -352,6 +352,7 @@ namespace SmrFramework {
     if (string == NULL && s == NULL) return true;
     if (string == NULL) return false;
     if (s == NULL) return false;
+    if (strlen(s) == 0 && length == 0) return true;
     for (i=0; i<length; i++)
       if (string[i] != s[i]) return false;
     if (s[length] != 0) return false;
@@ -360,11 +361,13 @@ namespace SmrFramework {
 
   bool String::Equals(String* s) {
     if (s == NULL) return false;
+    if (s->Length() == 0 && length == 0) return true;
     if (s->Length() == 0) return false;
     return Equals(s->AsCharArray());
     }
 
   bool String::Equals(String s) {
+    if (s.Length() == 0 && length == 0) return true;
     if (s.Length() == 0) return false;
     return Equals(s.AsCharArray());
     }
