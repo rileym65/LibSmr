@@ -220,5 +220,11 @@ namespace SmrFramework {
     return v;
     }
 
+  char* Utils::Strip(char* buffer) {
+    while (buffer[strlen(buffer)-1] > 0 && buffer[strlen(buffer)-1] <= ' ')
+      buffer[strlen(buffer)-1] = 0;
+    return buffer;
+    }
+
   }
 

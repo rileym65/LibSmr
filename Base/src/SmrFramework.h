@@ -852,6 +852,7 @@ namespace SmrFramework {
       static UInt16 RotateRight(UInt16 v, UInt32 count);
       static UInt32 RotateRight(UInt32 v, UInt32 count);
       static UInt64 RotateRight(UInt64 v, UInt32 count);
+      static char*  Strip(char* buffer);
     };
 
   class Forth;
