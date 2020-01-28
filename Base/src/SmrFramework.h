@@ -308,6 +308,8 @@ namespace SmrFramework {
       static File*   Create(const char* pathname);
       static void    Delete(const char* pathname);
       static bool    Exists(const char* pathname);
+      static bool    Exists(String* pathname);
+      static bool    Exists(String pathname);
       static String  Extension(const char* path);
       static String  Extension(String* path);
       static String  Extension(String path);
