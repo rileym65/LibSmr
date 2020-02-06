@@ -80,8 +80,10 @@ namespace SmrFramework {
     if (group == NULL) return NULL;
     ret = new List<String*>();
     i = 0;
-    while (group->gr_mem[i] != NULL)
+    while (group->gr_mem[i] != NULL) {
       ret->Add(new String(group->gr_mem[i]));
+      i++;
+      }
     return ret;
     }
 
