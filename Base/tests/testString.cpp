@@ -322,4 +322,31 @@ void TestString() {
   catch (Exception &e) {
     Bad("Exception thrown when executing TrimRight on string of spaces");
     }
+
+  string1 = String("a+bb * c /e+(abc) = d");
+  list = string1.Tokenize(String("+-*/= \t"));
+  if (list->Count() == 11) Good("Tokenize returned a list of the correct size");
+    else Bad("Tokenize did not return the correct size list");
+  if (list->At(0)->Equals("a")) Good("First token was correct");
+    else Bad("First token was not correct");
+  if (list->At(1)->Equals("+")) Good("Second token was correct");
+    else Bad("Second token was not correct");
+  if (list->At(2)->Equals("bb")) Good("Third token was correct");
+    else Bad("Third token was not correct");
+  if (list->At(3)->Equals("*")) Good("Fourth token was correct");
+    else Bad("Fourth token was not correct");
+  if (list->At(4)->Equals("c")) Good("Fifth token was correct");
+    else Bad("Fifth token was not correct");
+  if (list->At(5)->Equals("/")) Good("Sixth token was correct");
+    else Bad("Sixth token was not correct");
+  if (list->At(6)->Equals("e")) Good("Seventh token was correct");
+    else Bad("Seventh token was not correct");
+  if (list->At(7)->Equals("+")) Good("Eighth token was correct");
+    else Bad("Eighth token was not correct");
+  if (list->At(8)->Equals("(abc)")) Good("Ninth token was correct");
+    else Bad("Ninth token was not correct");
+  if (list->At(9)->Equals("=")) Good("Tenth token was correct");
+    else Bad("Tenth token was not correct");
+  if (list->At(10)->Equals("d")) Good("Eleventh token was correct");
+    else Bad("Eleventh token was not correct");
   }

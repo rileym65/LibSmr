@@ -60,6 +60,14 @@ namespace SmrFramework {
     _setValue(s.string, s.length);
     }
   
+  String::String(char s) {
+    objectType = (char*)"String";
+    string = (Byte*)malloc(2);
+    string[0] = s;
+    string[1] = 0;
+    length = 1;
+    }
+
   String::~String() {
     if (string != NULL) free(string);
     }
@@ -353,6 +361,7 @@ namespace SmrFramework {
     if (string == NULL) return false;
     if (s == NULL) return false;
     if (strlen(s) == 0 && length == 0) return true;
+    if (strlen(s) != length) return false;
     for (i=0; i<length; i++)
       if (string[i] != s[i]) return false;
     if (s[length] != 0) return false;
@@ -370,6 +379,38 @@ namespace SmrFramework {
     if (s.Length() == 0 && length == 0) return true;
     if (s.Length() == 0) return false;
     return Equals(s.AsCharArray());
+    }
+
+  bool String::Equals(const char* s,Boolean igncase) {
+    UInt32 i;
+    char c1, c2;
+    if (!igncase) return Equals(s);
+    if (string == NULL && s == NULL) return true;
+    if (string == NULL) return false;
+    if (s == NULL) return false;
+    if (strlen(s) == 0 && length == 0) return true;
+    if (strlen(s) != length) return false;
+    for (i=0; i<length; i++) {
+      c1 = string[i];
+      c2 = s[i];
+      if (c1 >= 'a' && c1 <= 'z') c1 -= 32;
+      if (c2 >= 'a' && c2 <= 'z') c2 -= 32;
+      if (c1 != c2) return false;
+      }
+    return true;
+    }
+
+  bool String::Equals(String* s,Boolean igncase) {
+    if (s == NULL) return false;
+    if (s->Length() == 0 && length == 0) return true;
+    if (s->Length() == 0) return false;
+    return Equals(s->AsCharArray(),igncase);
+    }
+
+  bool String::Equals(String s,Boolean igncase) {
+    if (s.Length() == 0 && length == 0) return true;
+    if (s.Length() == 0) return false;
+    return Equals(s.AsCharArray(),igncase);
     }
 
   char String::First() {
@@ -624,6 +665,35 @@ namespace SmrFramework {
     ret = String(temp);
     free(temp);
     return ret;
+    }
+
+  List<String*>* String::Tokenize(String* separators) {
+    UInt32 pos;
+    List<String*> *ret;
+    String current;
+    pos = 0;
+    ret = new List<String*>();
+    current = String("");
+    while (pos < length) {
+      if (separators->IndexOf(string[pos]) >= 0) {
+        if (current.Length() > 0) {
+          ret->Add(new String(current));
+          current = String("");
+          }
+        if (string[pos] != ' ' && string[pos] != '\t')
+          ret->Add(new String(string[pos]));
+        }
+      else {
+        current = current + String(string[pos]);
+        }
+      pos++;
+      }
+    if (current.Length() > 0) ret->Add(new String(current));
+    return ret;
+    }
+
+  List<String*>* String::Tokenize(String separators) {
+    return Tokenize(&separators);
     }
 
   String String::ToLower() {

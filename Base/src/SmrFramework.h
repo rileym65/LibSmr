@@ -931,6 +931,7 @@ namespace SmrFramework {
       String(Byte* s,UInt32 len);
       String(String* s);
       String(const String &s);
+      String(char s);
       virtual ~String();
       virtual String&        operator= (const String &s);
       virtual void           operator = (const char* s);
@@ -973,6 +974,9 @@ namespace SmrFramework {
       virtual bool           Equals(const char* s);
       virtual bool           Equals(String* s);
       virtual bool           Equals(String s);
+      virtual bool           Equals(const char* s,Boolean igncase);
+      virtual bool           Equals(String* s,Boolean igncase);
+      virtual bool           Equals(String s,Boolean igncase);
       virtual char           First();
       virtual int            IndexOf(char c);
       virtual int            IndexOf(const char* s);
@@ -1000,6 +1004,8 @@ namespace SmrFramework {
       virtual String         Substring(int start, int length);
       virtual char*          AsCharArray();
       virtual char*          ToCharArray();
+      virtual List<String*>* Tokenize(String* separators);
+      virtual List<String*>* Tokenize(String separators);
       virtual String         ToLower();
       virtual String         ToString();
       virtual String         ToUpper();
