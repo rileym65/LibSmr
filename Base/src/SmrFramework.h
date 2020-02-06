@@ -308,6 +308,8 @@ namespace SmrFramework {
       static File*   Create(const char* pathname);
       static void    Delete(const char* pathname);
       static bool    Exists(const char* pathname);
+      static bool    Exists(String* pathname);
+      static bool    Exists(String pathname);
       static String  Extension(const char* path);
       static String  Extension(String* path);
       static String  Extension(String path);
@@ -852,6 +854,7 @@ namespace SmrFramework {
       static UInt16 RotateRight(UInt16 v, UInt32 count);
       static UInt32 RotateRight(UInt32 v, UInt32 count);
       static UInt64 RotateRight(UInt64 v, UInt32 count);
+      static char*  Strip(char* buffer);
     };
 
   class Forth;

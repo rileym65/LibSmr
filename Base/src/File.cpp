@@ -152,6 +152,14 @@ namespace SmrFramework {
     return ret;
     }
   
+  bool File::Exists(String* pathname) {
+    return Exists(pathname->AsCharArray());
+    }
+  
+  bool File::Exists(String pathname) {
+    return Exists(pathname.AsCharArray());
+    }
+
   String File::Extension(const char* path) {
     char *end;
     char *pos;
