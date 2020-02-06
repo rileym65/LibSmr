@@ -18,13 +18,11 @@ void TestSystem() {
   printf("Info: User Name   : %s\n",str.AsCharArray());
   str = System::GroupName();
   printf("Info: Group Name  : %s\n",str.AsCharArray());
-
   members = System::Members(System::GroupID());
   printf("Info: Members     :");
   pstr = members->First();
   while (pstr != NULL) {
     printf(" %s",pstr->AsCharArray());
-    delete(pstr);
     pstr = members->Next();
     }
   printf("\n");
