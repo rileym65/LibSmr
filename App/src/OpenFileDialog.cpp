@@ -84,12 +84,10 @@ void OpenFileDialog::_CancelButtonReleased(void* obj, void* sender, EventArgs ar
   }
 
 void OpenFileDialog::OkButtonReleased(void* sender, MouseEventArgs args) {
-  printf("OK pressed\n");
   this->Ok();
   }
 
 void OpenFileDialog::CancelButtonReleased(void* sender, MouseEventArgs args) {
-  printf("Cancel pressed\n");
   this->Cancel();
   }
 
