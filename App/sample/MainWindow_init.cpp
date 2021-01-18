@@ -73,7 +73,7 @@ button1->BorderWidth(0);
   this->Add(pictureButton);
 
   picture1 = new PictureBox(this, 500, 450, 100, 100);
-  picture1->BackgroundColor(0x0000, 0x0000, 0x0000);
+  picture1->BackgroundColor(0xffff, 0xffff, 0xffff);
   picture1->Picture(imageE);
   picture1->Visible(true);
   this->Add(picture1);

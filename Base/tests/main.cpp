@@ -40,12 +40,12 @@ int main(int argc, char** argv) {
   TestCallback();
   TestParser();
   TestDictionary();
-  TestString();
   TestHash();
   TestHexGrid();
   TestUtils();
   TestConvert();
   TestArray();
+  TestString();
 
   printf("\nAll test groups completed\n");
   }
