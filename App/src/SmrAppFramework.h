@@ -1,7 +1,7 @@
 #ifndef _SMR_APP_FRAMEWORK_H
 #define _SMR_APP_FRAMEWORK_H
 
-//#define USEXFT
+#define USEXFT
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -680,6 +680,8 @@ class Control;
       virtual void OnRelease(EventHandler* handler);
       virtual void MouseDownEvent(int x, int y, int button);
       virtual void MouseUpEvent(int x, int y, int button);
+      virtual Boolean Pressed();
+      virtual Boolean Pressed(Boolean b);
       virtual void Redraw();
       virtual Boolean   Visible();
       virtual Boolean   Visible(Boolean state);

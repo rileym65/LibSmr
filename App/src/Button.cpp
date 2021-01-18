@@ -182,5 +182,16 @@ namespace SmrFramework {
     this->pressed = 0;
     return Control::Visible(state);
     }
+ 
+  Boolean Button::Pressed() {
+    return (pressed == 0) ? false : true;
+    }
+
+  Boolean Button::Pressed(Boolean b) {
+    if (b) pressed = -1;
+      else pressed = 0;
+    Redraw();
+    return (pressed == 0) ? false : true;
+    }
   } 
 
