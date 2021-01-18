@@ -50,6 +50,7 @@ namespace SmrFramework {
     Int32 client_sock;
     struct sockaddr_in client;
     socklen_t len;
+    len = sizeof(client);
     client_sock = accept(sock, (struct sockaddr*)&client, &len);
     if (client_sock < 0) throw InvalidOpException(this, "Accept failed");
     return new Socket(client_sock,
