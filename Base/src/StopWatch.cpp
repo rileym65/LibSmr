@@ -46,7 +46,7 @@ namespace SmrFramework {
     stopTime = DateTime::Now();
     gettimeofday(&tv, NULL);
     stopMilli = tv.tv_sec * 1000;
-    stopMilli = tv.tv_usec / 1000;
+    stopMilli += tv.tv_usec / 1000;
     running = false;
     }
 
@@ -61,7 +61,7 @@ namespace SmrFramework {
       stopTime = DateTime::Now();
       gettimeofday(&tv, NULL);
       stopMilli = tv.tv_sec * 1000;
-      stopMilli = tv.tv_usec / 1000;
+      stopMilli += tv.tv_usec / 1000;
       }
     return (stopMilli - startMilli) / 1000;
     }
@@ -72,7 +72,7 @@ namespace SmrFramework {
       stopTime = DateTime::Now();
       gettimeofday(&tv, NULL);
       stopMilli = tv.tv_sec * 1000;
-      stopMilli = tv.tv_usec / 1000;
+      stopMilli += tv.tv_usec / 1000;
       }
     return stopMilli - startMilli;
     }
