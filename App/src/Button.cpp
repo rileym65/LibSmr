@@ -182,5 +182,34 @@ namespace SmrFramework {
     this->pressed = 0;
     return Control::Visible(state);
     }
+ 
+  Boolean Button::Pressed() {
+    return (pressed == 0) ? false : true;
+    }
+
+  Boolean Button::Pressed(Boolean b) {
+    XSetWindowAttributes attr;
+    unsigned long mask;
+    if (b) {
+      pressed = -1;
+      if (pressedImage != NULL) {
+        mask = CWBackPixmap;
+        attr.background_pixmap = pressedPixmap;
+        XChangeWindowAttributes(display, window, mask, &attr);
+        XClearWindow(display, window);
+        }
+      }
+    else {
+      pressed = 0;
+      if (backgroundImage != NULL) {
+        mask = CWBackPixmap;
+        attr.background_pixmap = backgroundPixmap;
+        XChangeWindowAttributes(display, window, mask, &attr);
+        XClearWindow(display, window);
+        }
+      }
+    Redraw();
+    return (pressed == 0) ? false : true;
+    }
   } 
 

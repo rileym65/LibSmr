@@ -680,6 +680,8 @@ class Control;
       virtual void OnRelease(EventHandler* handler);
       virtual void MouseDownEvent(int x, int y, int button);
       virtual void MouseUpEvent(int x, int y, int button);
+      virtual Boolean Pressed();
+      virtual Boolean Pressed(Boolean b);
       virtual void Redraw();
       virtual Boolean   Visible();
       virtual Boolean   Visible(Boolean state);
