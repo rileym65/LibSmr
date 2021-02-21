@@ -12,7 +12,7 @@ LIBPATH = ./
 LIBS =
 INCPATH = -I.
 INCS =
-DEFS = -Wall -std=c++11
+DEFS = -Wall -std=c++11 -fPIC
 HEADERS = SmrFramework.h SmrList.h SmrSet.h SmrStack.h SmrQueue.h SmrArray.h
 OBJS = \
 	Base64.o \
