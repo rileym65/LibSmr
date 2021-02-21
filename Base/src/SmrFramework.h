@@ -689,11 +689,15 @@ namespace SmrFramework {
       DateTime startTime;
       DateTime stopTime;
       Boolean  running;
+      UInt64   startMilli;
+      UInt64   stopMilli;
     public:
       StopWatch();
       virtual ~StopWatch();
       virtual void     Restart();
       virtual Boolean  Running();
+      virtual UInt64   Seconds();
+      virtual UInt64   Milliseconds();
       virtual void     Start();
       virtual void     Stop();
       virtual TimeSpan Time();
