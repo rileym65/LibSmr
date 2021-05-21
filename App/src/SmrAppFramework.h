@@ -1,7 +1,7 @@
 #ifndef _SMR_APP_FRAMEWORK_H
 #define _SMR_APP_FRAMEWORK_H
 
-#define USEXFT
+// #define USEXFT
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -849,6 +849,7 @@ class Control;
       DropDownList(Control* parent,int x,int y,int w,int h);
       virtual ~DropDownList();
       virtual void    Add(Object* o);
+      virtual void    RemoveItemAt(UInt32 i);
       virtual void    Clear();
       virtual UInt32  Count();
       virtual Object* ItemAt(UInt32 i);
