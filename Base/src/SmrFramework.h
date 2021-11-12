@@ -2327,6 +2327,105 @@ namespace SmrFramework {
       virtual void   SetTopography(UInt32 inputs, UInt32 hidden, UInt32 outputs);
     };
 
+class JsonBase {
+  protected:
+    Byte jsonType;
+  public:
+    JsonBase();
+    virtual ~JsonBase();
+    virtual Byte    JsonType();
+    virtual String* ToString();
+  };
+
+class JsonNull : public JsonBase {
+  protected:
+  public:
+    JsonNull();
+    virtual ~JsonNull();
+    virtual String* ToString();
+  };
+
+class JsonBoolean : public JsonBase {
+  protected:
+    Boolean value;
+  public:
+    JsonBoolean(Boolean b);
+    JsonBoolean(char* b);
+    JsonBoolean(String b);
+    JsonBoolean(String *b);
+    ~JsonBoolean();
+    virtual String* ToString();
+    virtual Boolean Value();
+  };
+class JsonNumber : public JsonBase {
+  protected:
+    Int32  ivalue;
+    Double dvalue;
+  public:
+    JsonNumber(UInt32);
+    JsonNumber(Int32);
+    JsonNumber(Double);
+    virtual ~JsonNumber();
+    virtual Int32   AsInteger();
+    virtual Double  AsDouble();
+    virtual String* ToString();
+  };
+
+class JsonString : public JsonBase {
+  protected:
+    String *value;
+  public:
+    JsonString(char* s);
+    JsonString(String s);
+    JsonString(String *s);
+    virtual ~JsonString();
+    virtual String *ToString();
+    virtual String *Value();
+  };
+class JsonArray : public JsonBase {
+  protected:
+    List<JsonBase*> *items;
+  public:
+    JsonArray();
+    JsonArray(const char* s);
+    ~JsonArray();
+    void Add(Boolean value);
+    void Add(Int32 value);
+    void Add(Double value);
+    void Add(const char* value);
+    void Add(String value);
+    void Add(String *value);
+    void Add(JsonBase* obj);
+    JsonBase* At(UInt32 i);
+    UInt32 Count();
+    virtual String* ToString();
+  };
+
+class Json : public JsonBase {
+  protected:
+    List<String*> *keys;
+    List<JsonBase*> *values;
+  public:
+    static const int NULLOBJ = 0;
+    static const int NUMBER  = 1;
+    static const int STRING  = 2;
+    static const int BOOLEAN = 3;
+    static const int ARRAY   = 4;
+    static const int OBJECT  = 5;
+    Json();
+    Json(const char* s);
+    virtual ~Json();
+    void Add(const char* key, Boolean value);
+    void Add(const char* key, Int32 value);
+    void Add(const char* key, Double value);
+    void Add(const char* key, const char* value);
+    void Add(const char* key, String value);
+    void Add(const char* key, String *value);
+    void Add(const char* key, JsonBase* obj);
+    JsonBase* Get(const char* key);
+    virtual String* ToString();
+  };
+
 
 
 #include <SmrArray.h>
