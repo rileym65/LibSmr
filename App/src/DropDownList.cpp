@@ -52,6 +52,13 @@ namespace SmrFramework {
     Redraw();
     }
 
+  void DropDownList::RemoveItemAt(UInt32 i) {
+    Object* obj;
+    obj = items->At(i);
+    if (obj != NULL) delete(obj);
+    items->RemoveAt(i);
+    }
+
   void DropDownList::Clear() {
     UInt32 i;
     for (i=0; i<items->Count(); i++)
