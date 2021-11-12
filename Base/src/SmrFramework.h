@@ -2426,6 +2426,34 @@ class Json : public JsonBase {
     virtual String* ToString();
   };
 
+class HttpRequest {
+  protected:
+    Byte           method;
+    String        *host;
+    String        *uri;
+    UInt32         port;
+    String        *protocol;
+    UInt32         httpResult;
+    String        *body;
+    List<String*> *requestHeaders;
+    List<String*> *requestHeaderValues;
+    List<String*> *responseHeaders;
+    List<String*> *responseHeaderValues;
+    char          *_readLine(char* input, char* buffer);
+  public:
+    static const int POST = 1;
+    static const int GET = 2;
+    HttpRequest(const char* uri);
+    ~HttpRequest();
+    void AddRequestHeader(const char* key, const char* value);
+    String* Body();
+    Byte Method();
+    Byte Method(Byte i);
+    String* Protocol();
+    int Send(const char* message);
+    UInt32 Result();
+  };
+
 
 
 #include <SmrArray.h>

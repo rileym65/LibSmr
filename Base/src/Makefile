@@ -38,6 +38,7 @@ OBJS = \
 	Hash.o \
 	HexGrid.o \
 	HrTimer.o \
+	HttpRequest.o \
 	Huffman.o \
 	Image.o \
 	ImageBMP.o \
@@ -47,6 +48,7 @@ OBJS = \
 	ImageXBM.o \
 	ImageXPM.o \
 	InvalidOpException.o \
+	Json.o \
 	Length.o \
 	Lexer.o \
 	Lfsr.o \
@@ -153,6 +155,7 @@ GridObject.o:          $(HEADERS) GridObject.cpp
 Hash.o:                $(HEADERS) Hash.cpp
 HexGrid.o:             $(HEADERS) HexGrid.cpp
 HrTimer.o:             $(HEADERS) HrTimer.cpp
+HttpRequest.o:         $(HEADERS) HttpRequest.cpp
 Huffman.o:             $(HEADERS) Huffman.cpp
 Image.o:               $(HEADERS) Image.cpp
 ImageBMP.o:            $(HEADERS) ImageBMP.cpp
@@ -162,6 +165,7 @@ ImagePNG.o:            $(HEADERS) ImagePNG.cpp
 ImageXBM.o:            $(HEADERS) ImageXBM.cpp
 ImageXPM.o:            $(HEADERS) ImageXPM.cpp
 InvalidOpException.o:  $(HEADERS) InvalidOpException.cpp
+Json.o:                $(HEADERS) Json.cpp
 Length.o:              $(HEADERS) Length.cpp
 Lexer.o:               $(HEADERS) Lexer.cpp
 Lfsr.o:                $(HEADERS) Lfsr.cpp
