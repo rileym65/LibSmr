@@ -152,8 +152,8 @@ int HttpRequest::Send(const char* message) {
   strcat(msg, "Accept-Encoding: identity\r\n");
   strcat(msg, "\r\n");
   strcat(msg, message);
-printf("%s\n",msg);
-printf("--------------------------------------\n");
+// printf("%s\n",msg);
+// printf("--------------------------------------\n");
 
   client = new Socket();
   client->Connect(host->AsCharArray(), port);
@@ -161,9 +161,9 @@ printf("--------------------------------------\n");
   status = client->Receive((Byte*)msg, 65535);
 
 msg[status] = 0;
-printf("result = %d\n",status);
-printf("--------------------------------------\n");
-printf("%s\n",msg);
+// printf("result = %d\n",status);
+// printf("--------------------------------------\n");
+// printf("%s\n",msg);
 
   client->Close();
   delete(client);
@@ -179,7 +179,7 @@ printf("%s\n",msg);
     return httpResult;
     }
   pos = 0;
-printf("-->%s\n",line);
+// printf("-->%s\n",line);
   lpos = line;
   while (*lpos != 0 && *lpos >' ') buffer[pos++] = *lpos++;
   buffer[pos] = 0;
@@ -190,8 +190,8 @@ printf("-->%s\n",line);
   buffer[pos] = 0;
   httpResult = atoi(buffer);
   
-printf("protocol: %s\n",protocol->AsCharArray());
-printf("Result  : %d\n",httpResult);
+// printf("protocol: %s\n",protocol->AsCharArray());
+// printf("Result  : %d\n",httpResult);
 
   chunked = false;
   mpos = _readLine(mpos, line);
@@ -219,7 +219,7 @@ printf("Result  : %d\n",httpResult);
     }
 
   lpos = mpos;
-  if (chunked) printf("Data is chunked\n"); else printf("Data is NOT chunked\n");
+//  if (chunked) printf("Data is chunked\n"); else printf("Data is NOT chunked\n");
   if (chunked) {
     flag = true;
     pos = 0;
