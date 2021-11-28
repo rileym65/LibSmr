@@ -231,7 +231,11 @@ msg[status] = 0;
         if (*mpos >= 'A' && *mpos <= 'F') size = (size << 4) + (*mpos - 55);
         mpos++;
         }
-      if (*mpos == 10 || *mpos == 13) mpos += 2;
+      if (*mpos == 0 || size == 0) {
+        size = 0;
+        flag = false;
+        }
+      else if (*mpos == 10 || *mpos == 13) mpos += 2;
       else {
         httpResult = 400;
         return httpResult;
