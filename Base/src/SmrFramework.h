@@ -2360,10 +2360,13 @@ class JsonBoolean : public JsonBase {
 class JsonNumber : public JsonBase {
   protected:
     Int32  ivalue;
+    Int64  lvalue;
     Double dvalue;
   public:
     JsonNumber(UInt32);
     JsonNumber(Int32);
+    JsonNumber(UInt64);
+    JsonNumber(Int64);
     JsonNumber(Double);
     virtual ~JsonNumber();
     virtual Int32   AsInteger();
@@ -2391,6 +2394,9 @@ class JsonArray : public JsonBase {
     ~JsonArray();
     void Add(Boolean value);
     void Add(Int32 value);
+    void Add(UInt32 value);
+    void Add(Int64 value);
+    void Add(UInt64 value);
     void Add(Double value);
     void Add(const char* value);
     void Add(String value);
@@ -2417,6 +2423,9 @@ class Json : public JsonBase {
     virtual ~Json();
     void Add(const char* key, Boolean value);
     void Add(const char* key, Int32 value);
+    void Add(const char* key, UInt32 value);
+    void Add(const char* key, Int64 value);
+    void Add(const char* key, UInt64 value);
     void Add(const char* key, Double value);
     void Add(const char* key, const char* value);
     void Add(const char* key, String value);

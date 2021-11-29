@@ -129,6 +129,7 @@ int HttpRequest::Send(const char* message) {
   char buffer[256];
   struct hostent *host_ptr;
   struct sockaddr_in addr;
+// printf("in HttpRequest::Send\n"); fflush(stdout);
   if (body != NULL) {
     delete(body);
     body = NULL;
@@ -219,7 +220,14 @@ msg[status] = 0;
     }
 
   lpos = mpos;
-//  if (chunked) printf("Data is chunked\n"); else printf("Data is NOT chunked\n");
+
+// printf("\n\n");
+// for (i=0;i<strlen(lpos);i++)
+// if (lpos[i] < 32) printf("<%02x>",lpos[i]);
+// else printf("%c",lpos[i]);
+// printf("\n\n");
+
+// if (chunked) printf("Data is chunked\n"); else printf("Data is NOT chunked\n");
   if (chunked) {
     flag = true;
     pos = 0;
@@ -231,8 +239,10 @@ msg[status] = 0;
         if (*mpos >= 'A' && *mpos <= 'F') size = (size << 4) + (*mpos - 55);
         mpos++;
         }
+// printf("size=%d\n",size);
+// printf("Next 2: %02x %02x\n",*mpos, *(mpos+1));
       if (*mpos == 10 || *mpos == 13) mpos += 2;
-      else {
+      else if (size != 0) {
         httpResult = 400;
         return httpResult;
         }

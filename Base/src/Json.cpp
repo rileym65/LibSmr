@@ -34,7 +34,6 @@ JsonArray::JsonArray() {
 
 JsonArray::JsonArray(const char* s) : JsonBase() {
   char value[65536];
-  Boolean quote;
   Boolean dot;
   int  pos;
   int  count;
@@ -160,7 +159,7 @@ JsonArray::JsonArray(const char* s) : JsonBase() {
   }
 
 JsonArray::~JsonArray() {
-  int i;
+  UInt32 i;
   for (i=0; i<items->Count(); i++)
     delete(items->At(i));
   delete(items);
@@ -171,6 +170,10 @@ void JsonArray::Add(Boolean value) {
   }
 
 void JsonArray::Add(Int32 value) {
+  items->Add(new JsonNumber(value));
+  }
+
+void JsonArray::Add(UInt32 value) {
   items->Add(new JsonNumber(value));
   }
 
@@ -204,7 +207,7 @@ UInt32 JsonArray::Count() {
   }
 
 String* JsonArray::ToString() {
-  int i;
+  UInt32 i;
   String *item;
   char buffer[65536];
   strcpy(buffer,"[");
@@ -282,18 +285,35 @@ JsonNumber::JsonNumber(UInt32 i) : JsonBase() {
   jsonType = Json::NUMBER;
   ivalue = i;
   dvalue = i;
+  lvalue = 0;
   }
 
 JsonNumber::JsonNumber(Int32 i) : JsonBase() {
   jsonType = Json::NUMBER;
   ivalue = i;
   dvalue = i;
+  lvalue = 0;
+  }
+
+JsonNumber::JsonNumber(UInt64 i) : JsonBase() {
+  jsonType = Json::NUMBER;
+  ivalue = i & 0xffffffff;
+  dvalue = i;
+  lvalue = i;
+  }
+
+JsonNumber::JsonNumber(Int64 i) : JsonBase() {
+  jsonType = Json::NUMBER;
+  ivalue = i & 0xffffffff;
+  dvalue = i;
+  lvalue = i;
   }
 
 JsonNumber::JsonNumber(Double d) : JsonBase() {
   jsonType = Json::NUMBER;
   ivalue = (Int32)d;
   dvalue = d;
+  lvalue = 0;
   }
 
 JsonNumber::~JsonNumber() {
@@ -520,7 +540,7 @@ Json::Json(const char* s) : JsonBase() {
   }
 
 Json::~Json() {
-  int i;
+  UInt32 i;
   for (i=0; i<keys->Count(); i++) delete(keys->At(i));
   for (i=0; i<values->Count(); i++) delete(values->At(i));
   delete(keys);
@@ -533,6 +553,21 @@ void Json::Add(const char* key, Boolean value) {
   }
 
 void Json::Add(const char* key, Int32 value) {
+  keys->Add(new String(key));
+  values->Add(new JsonNumber(value));
+  }
+
+void Json::Add(const char* key, UInt32 value) {
+  keys->Add(new String(key));
+  values->Add(new JsonNumber(value));
+  }
+
+void Json::Add(const char* key, Int64 value) {
+  keys->Add(new String(key));
+  values->Add(new JsonNumber(value));
+  }
+
+void Json::Add(const char* key, UInt64 value) {
   keys->Add(new String(key));
   values->Add(new JsonNumber(value));
   }
@@ -563,14 +598,14 @@ void Json::Add(const char* key, JsonBase *obj) {
   }
 
 JsonBase* Json::Get(const char* key) {
-  int i;
+  UInt32 i;
   for (i=0; i<keys->Count(); i++)
     if (keys->At(i)->Equals(key)) return values->At(i);
   return NULL;
   }
 
 String* Json::ToString() {
-  int i;
+  UInt32 i;
   String *item;
   char buffer[65536];
   strcpy(buffer,"{");
