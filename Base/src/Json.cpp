@@ -177,8 +177,6 @@ void JsonArray::Add(UInt32 value) {
   items->Add(new JsonNumber(value));
   }
 
-<<<<<<< HEAD
-=======
 void JsonArray::Add(Int64 value) {
   items->Add(new JsonNumber(value));
   }
@@ -187,7 +185,6 @@ void JsonArray::Add(UInt64 value) {
   items->Add(new JsonNumber(value));
   }
 
->>>>>>> 808b7ed967fd374fdf891748d1bd7e41f3eb4db7
 void JsonArray::Add(Double value) {
   items->Add(new JsonNumber(value));
   }
@@ -319,22 +316,21 @@ JsonNumber::JsonNumber(Int64 i) : JsonBase() {
   ivalue = i & 0xffffffff;
   lvalue = i;
   dvalue = i;
-  lvalue = 0;
   }
 
-JsonNumber::JsonNumber(UInt64 i) : JsonBase() {
-  jsonType = Json::NUMBER;
-  ivalue = i & 0xffffffff;
-  dvalue = i;
-  lvalue = i;
-  }
+//JsonNumber::JsonNumber(UInt64 i) : JsonBase() {
+//  jsonType = Json::NUMBER;
+//  ivalue = i & 0xffffffff;
+//  dvalue = i;
+//  lvalue = i;
+//  }
 
-JsonNumber::JsonNumber(Int64 i) : JsonBase() {
-  jsonType = Json::NUMBER;
-  ivalue = i & 0xffffffff;
-  dvalue = i;
-  lvalue = i;
-  }
+//JsonNumber::JsonNumber(Int64 i) : JsonBase() {
+//  jsonType = Json::NUMBER;
+//  ivalue = i & 0xffffffff;
+//  dvalue = i;
+//  lvalue = i;
+//  }
 
 JsonNumber::JsonNumber(Double d) : JsonBase() {
   jsonType = Json::NUMBER;

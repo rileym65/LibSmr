@@ -823,8 +823,10 @@ namespace SmrFramework {
       virtual Boolean  ContainsValue(V value);
       virtual UInt32   Count();
       virtual V        Lookup(K key);
+      virtual K        KeyAt(UInt32 i);
       virtual List<K>* Keys();
       virtual V        Remove(K key);
+      virtual V        ValueAt(UInt32 i);
       virtual List<V>* Values();
     };
 

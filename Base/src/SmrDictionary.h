@@ -78,6 +78,12 @@ UInt32 Dictionary<K,V>::Count() {
   }
 
 template <class K,class V>
+K Dictionary<K,V>::KeyAt(UInt32 i) {
+  if (i >= numEntries) throw RangeException("Index out of range");
+  return keys[i];
+  }
+
+template <class K,class V>
 List<K>* Dictionary<K,V>::Keys() {
   UInt32   i;
   List<K>* ret;
@@ -115,6 +121,12 @@ V Dictionary<K,V>::Remove(K key) {
       return ret;
       }
   throw NotFoundException("Key not found");
+  }
+
+template <class K,class V>
+V Dictionary<K,V>::ValueAt(UInt32 i) {
+  if (i >= numEntries) throw RangeException("Index out of range");
+  return values[i];
   }
 
 template <class K,class V>
