@@ -2465,6 +2465,25 @@ class HttpRequest {
     UInt32 Result();
   };
 
+class AssociativeArray : public Object {
+  protected:
+    List<String*> *keys;
+    List<Object*> *values;
+  public:
+    AssociativeArray();
+    ~AssociativeArray();
+    void    Add(char* s, Object* o);
+    void    Add(String s, Object* o);
+    void    Add(String* s, Object* o);
+    UInt32  Count();
+    Object *At(char* s);
+    Object *At(String s);
+    Object *At(String *s);
+    void    AtPut(char* s, Object* o);
+    void    AtPut(String s, Object* o);
+    void    AtPut(String *s, Object* o);
+  };
+
 
 
 #include <SmrArray.h>

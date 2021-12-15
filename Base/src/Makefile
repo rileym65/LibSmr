@@ -15,6 +15,7 @@ INCS =
 DEFS = -Wall -std=c++11 -fPIC
 HEADERS = SmrFramework.h SmrList.h SmrSet.h SmrStack.h SmrQueue.h SmrArray.h
 OBJS = \
+	AssociativeArray.o \
 	Base64.o \
 	BitStream.o \
 	Callback.o \
@@ -132,6 +133,7 @@ else
 	-cd /usr/lib; sudo ln -s libSmrFramework.so.1 libSmrFramework.so
 endif
 
+AssociativeArray.o:    $(HEADERS) AssociativeArray.cpp
 Base64.o:              $(HEADERS) Base64.cpp
 BitStream.o:           $(HEADERS) BitStream.cpp
 Callback.o:            $(HEADERS) Callback.cpp
