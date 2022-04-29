@@ -122,6 +122,7 @@ namespace SmrFramework {
     svc_name.sin_port = htons(port);
     memcpy(&svc_name.sin_addr, host_ptr->h_addr, host_ptr->h_length);
     status = connect(sock, (struct sockaddr*)&svc_name, sizeof(svc_name));
+printf("Socket status: %d\n",status);
     if (status < 0) throw InvalidOpException(this, "Failed to connect");
     this->port = ntohs(svc_name.sin_port);
     connected = true;

@@ -12,7 +12,7 @@ LIBPATH = ./
 LIBS =
 INCPATH = -I. -I/usr/include/freetype2
 INCS =
-DEFS = -Wall -std=c++11
+DEFS = -Wall -std=c++11 -fpic
 HEADERS = SmrAppFramework.h
 OBJS = \
 	Application.o \

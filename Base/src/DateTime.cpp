@@ -12,6 +12,7 @@
 #include <time.h>
 #include <sys/time.h>
 #include <stdio.h>
+#include <string.h>
 #include "SmrFramework.h"
 
 namespace SmrFramework {
@@ -38,6 +39,35 @@ namespace SmrFramework {
     _convertFromString(dt->AsCharArray());
     }
 
+  DateTime::DateTime(char mode) {
+    struct timeval tv;
+    this->objectType = (char*)"DateTime";
+    if (mode != 'l' && mode != 'L' && mode != 'u' && mode != 'U') mode = 'L';
+    epochSeconds = time(NULL);
+    gettimeofday(&tv, NULL);
+    this->microsecond= (int)tv.tv_usec;
+    timeMode = mode;
+    setupTime();
+    }
+
+  DateTime::DateTime(const char* dt,char mode) {
+    if (mode != 'l' && mode != 'L' && mode != 'u' && mode != 'U') mode = 'L';
+    timeMode = mode;
+    _convertFromString(dt);
+    }
+
+  DateTime::DateTime(String dt, char mode) {
+    if (mode != 'l' && mode != 'L' && mode != 'u' && mode != 'U') mode = 'L';
+    timeMode = mode;
+    _convertFromString(dt.AsCharArray());
+    }
+
+  DateTime::DateTime(String* dt, char mode) {
+    if (mode != 'l' && mode != 'L' && mode != 'u' && mode != 'U') mode = 'L';
+    timeMode = mode;
+    _convertFromString(dt->AsCharArray());
+    }
+
   DateTime::DateTime(int mo,int dy,int yr,int hr,int mn,int sc) {
     struct tm time;
     time.tm_hour = hr;
@@ -60,79 +90,39 @@ namespace SmrFramework {
     int hr,mn,sc,mo,dy,yr;
     struct tm time;
     timeMode = 'L';
+    yr = 0; mo = 0; dy = 0; hr = 0; mn = 0; sc = 0;
     while (*dt > 0 && *dt <= ' ') dt++;
-    if (*dt == 0) 
-      throw InvalidOpException(this, "Date/Time is not properly formatted");
-    mo = 0;
-    while (*dt > 0 && *dt != '/') {
-      if (*dt >= '0' && *dt <= '9') {
-        mo = (mo * 10) + (*dt - '0');
-        }
-      else throw InvalidOpException(this, "Date/Time is not properly formatted");
-      dt++;
+    if (strlen(dt) >= 19 &&
+        (dt[4] == '-' || dt[4] == '/') &&
+        (dt[7] == '-' || dt[7] == '/') &&
+        (dt[10] == 'T' || dt[10] == 't' || dt[10] == ' ') &&
+        dt[13] == ':' && dt[16] == ':') {
+      yr = ((dt[0]-'0') * 1000) + ((dt[1]-'0') * 100) + ((dt[2]-'0')*10) + (dt[3]-'0');
+      mo = ((dt[5]-'0') * 10) + (dt[6]-'0');
+      dy = ((dt[8]-'0') * 10) + (dt[9]-'0');
+      hr = ((dt[11]-'0') * 10) + (dt[12]-'0');
+      mn = ((dt[14]-'0') * 10) + (dt[15]-'0');
+      sc = ((dt[17]-'0') * 10) + (dt[18]-'0');
+      if (strlen(dt) >= 20 && (dt[19] == 'z' || dt[19] == 'Z')) timeMode = 'U';
       }
+    else if (strlen(dt) >= 19 &&
+        (dt[2] == '-' || dt[2] == '/') &&
+        (dt[5] == '-' || dt[5] == '/') &&
+        (dt[10] == 'T' || dt[10] == 't' || dt[10] == ' ') &&
+        dt[13] == ':' && dt[16] == ':') {
+      yr = ((dt[6]-'0') * 1000) + ((dt[7]-'0') * 100) + ((dt[8]-'0')*10) + (dt[9]-'0');
+      mo = ((dt[0]-'0') * 10) + (dt[1]-'0');
+      dy = ((dt[3]-'0') * 10) + (dt[4]-'0');
+      hr = ((dt[11]-'0') * 10) + (dt[12]-'0');
+      mn = ((dt[14]-'0') * 10) + (dt[15]-'0');
+      sc = ((dt[17]-'0') * 10) + (dt[18]-'0');
+      if (strlen(dt) >= 20 && (dt[19] == 'z' || dt[19] == 'Z')) timeMode = 'U';
+      }
+    else throw InvalidOpException(this, "Unknown Date/Time format");
+
     if (mo < 1 || mo > 12) throw RangeException(this, "Month not in range 1-12");
-    if (*dt != '/') throw InvalidOpException(this, "Date/Time is not peroperly formatted");
-    dt++;
-    dy = 0;
-    while (*dt > 0 && *dt != '/') {
-      if (*dt >= '0' && *dt <= '9') {
-        dy = (dy * 10) + (*dt - '0');
-        }
-      else throw InvalidOpException(this, "Date/Time is not properly formatted");
-      dt++;
-      }
-    if (*dt != '/') throw InvalidOpException(this, "Date/Time is not peroperly formatted");
-    dt++;
-    yr = 0;
-    while (*dt > 0 && *dt != ' ') {
-      if (*dt >= '0' && *dt <= '9') {
-        yr = (yr * 10) + (*dt - '0');
-        }
-      else throw InvalidOpException(this, "Date/Time is not properly formatted");
-      dt++;
-      }
     if (dy < 1 || dy > DaysInMonth(mo,yr))
       throw RangeException(this, "Day is not a valid value");
-    hr = 0;
-    mn = 0;
-    sc = 0;
-    while (*dt > 0 && *dt <= ' ') dt++;
-    if (*dt != 0 && (*dt < '0' || *dt > '9'))
-      throw InvalidOpException(this, "Date/Time is not properly formatted");
-    if (*dt != 0) {
-      while (*dt > 0 && *dt != ':') {
-        if (*dt >= '0' && *dt <= '9') {
-          hr = (hr * 10) + (*dt - '0');
-          }
-        else throw InvalidOpException(this, "Date/Time is not properly formatted");
-        dt++;
-        }
-      }
-    if (*dt == ':') dt++;
-    if (*dt != 0 && (*dt < '0' || *dt > '9'))
-      throw InvalidOpException(this, "Date/Time is not properly formatted");
-    if (*dt != 0) {
-      while (*dt > 0 && *dt != ':') {
-        if (*dt >= '0' && *dt <= '9') {
-          mn = (mn * 10) + (*dt - '0');
-          }
-        else throw InvalidOpException(this, "Date/Time is not properly formatted");
-        dt++;
-        }
-      }
-    if (*dt == ':') dt++;
-    if (*dt != 0 && (*dt < '0' || *dt > '9'))
-      throw InvalidOpException(this, "Date/Time is not properly formatted");
-    if (*dt != 0) {
-      while (*dt > 0 && *dt != ':') {
-        if (*dt >= '0' && *dt <= '9') {
-          sc = (sc * 10) + (*dt - '0');
-          }
-        else throw InvalidOpException(this, "Date/Time is not properly formatted");
-        dt++;
-        }
-      }
     if (hr < 0 || hr > 23) throw RangeException(this, "Hour is out of range");
     if (mn < 0 || mn > 59) throw RangeException(this, "Minute is out of range");
     if (sc < 0 || sc > 59) throw RangeException(this, "Second is out of range");
@@ -213,6 +203,10 @@ namespace SmrFramework {
 
   DateTime DateTime::Now() {
     return DateTime();
+    }
+
+  DateTime DateTime::Now(char mode) {
+    return DateTime(mode);
     }
 
   void DateTime::operator = (const DateTime &dt) {
@@ -538,7 +532,8 @@ namespace SmrFramework {
 
   String DateTime::ToString() {
     char temp[64];
-    sprintf(temp, "%02d/%02d/%04d %02d:%02d:%02d", month, day, year, hour, minute, second);
+    sprintf(temp, "%04d-%02d-%02dT%02d:%02d:%02d", year, month, day, hour, minute, second);
+    if (timeMode == 'U') strcat(temp,"Z");
     return String(temp);
     }
 

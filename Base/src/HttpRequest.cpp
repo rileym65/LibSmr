@@ -12,7 +12,7 @@
 
 using namespace SmrFramework;
 
-HttpRequest::HttpRequest(const char* uri) {
+HttpRequest::HttpRequest(const char* uri, int p) {
 int i;
   char    temp[2048];
   char    buffer[2048];
@@ -21,6 +21,7 @@ int i;
   pos = 0;
   body = NULL;
   flag = true;
+  debug = false;
   while (flag) {
     if (*uri == 0) flag = false;
     else if (*uri == '/' && *(uri+1) == '/') {
@@ -46,6 +47,7 @@ int i;
     strcpy(buffer,temp+8);
     strcpy(temp,buffer);
     }
+  if (p != 0) port = p;
   if (*uri == '/') uri++;
   this->host = new String(temp);
   this->uri = new String(uri);
@@ -112,6 +114,15 @@ Byte HttpRequest::Method(Byte i) {
   return method;
   }
 
+Boolean HttpRequest::Debug() {
+  return debug;
+  }
+
+Boolean HttpRequest::Debug(Boolean b) {
+  debug = b;
+  return debug;
+  }
+
 int HttpRequest::Send(const char* message) {
   int     i;
   int     sock;
@@ -153,19 +164,27 @@ int HttpRequest::Send(const char* message) {
   strcat(msg, "Accept-Encoding: identity\r\n");
   strcat(msg, "\r\n");
   strcat(msg, message);
-// printf("%s\n",msg);
-// printf("--------------------------------------\n");
-
+  if (debug) {
+    printf("--------------------------------------\n");
+    printf("%s\n",msg);
+    printf("--------------------------------------\n");
+    }
   client = new Socket();
+  if (debug) {
+    printf("Host: %s\n",host->AsCharArray());
+    printf("Port: %d\n",port);
+    }
   client->Connect(host->AsCharArray(), port);
   client->Send((Byte*)msg, strlen(msg));
   status = client->Receive((Byte*)msg, 65535);
 
-msg[status] = 0;
-// printf("result = %d\n",status);
-// printf("--------------------------------------\n");
-// printf("%s\n",msg);
-// printf("--------------------------------------\n");
+  if (status >= 0) msg[status] = 0;
+  if (debug) {
+    printf("result = %d\n",status);
+    printf("--------------------------------------\n");
+    printf("%s\n",msg);
+    printf("--------------------------------------\n");
+    }
 
   client->Close();
   delete(client);
@@ -192,8 +211,8 @@ msg[status] = 0;
   buffer[pos] = 0;
   httpResult = atoi(buffer);
   
-// printf("protocol: %s\n",protocol->AsCharArray());
-// printf("Result  : %d\n",httpResult);
+ printf("protocol: %s\n",protocol->AsCharArray());
+ printf("Result  : %d\n",httpResult);
 
   chunked = false;
   mpos = _readLine(mpos, line);
@@ -216,7 +235,7 @@ msg[status] = 0;
     }
 
   if (*mpos == 0) {
-    httpResult = 400;
+    body = new String("");
     return httpResult;
     }
 

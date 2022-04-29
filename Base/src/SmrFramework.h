@@ -643,6 +643,10 @@ namespace SmrFramework {
       DateTime(const char* dt);
       DateTime(String dt);
       DateTime(String* dt);
+      DateTime(char mode);
+      DateTime(const char* dt,char mode);
+      DateTime(String dt,char mode);
+      DateTime(String* dt,char mode);
       DateTime(int mo,int dy,int yr,int hr=0,int mn=0,int sc=0);
       virtual ~DateTime();
       static int        Compare(DateTime* a, DateTime* b);
@@ -653,6 +657,7 @@ namespace SmrFramework {
       static int        IsLeapYear(int year);
       static double     JulianDay(int m, int d, int y);
       static DateTime   Now();
+      static DateTime   Now(char mode);
       virtual void      operator = (const DateTime &dt);
       virtual Boolean   operator == (const DateTime &dt);
       virtual Boolean   operator != (const DateTime &dt);
@@ -2446,6 +2451,7 @@ class HttpRequest {
     String        *protocol;
     UInt32         httpResult;
     String        *body;
+    Boolean        debug;
     List<String*> *requestHeaders;
     List<String*> *requestHeaderValues;
     List<String*> *responseHeaders;
@@ -2454,10 +2460,12 @@ class HttpRequest {
   public:
     static const int POST = 1;
     static const int GET = 2;
-    HttpRequest(const char* uri);
+    HttpRequest(const char* uri, int p);
     ~HttpRequest();
     void AddRequestHeader(const char* key, const char* value);
     String* Body();
+    Boolean Debug();
+    Boolean Debug(Boolean b);
     Byte Method();
     Byte Method(Byte i);
     String* Protocol();
