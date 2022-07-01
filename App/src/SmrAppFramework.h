@@ -853,6 +853,7 @@ class Control;
       virtual void    Clear();
       virtual UInt32  Count();
       virtual Object* ItemAt(UInt32 i);
+      virtual List<Object*>* Items();
       virtual UInt32  MaxVisibleItems();
       virtual UInt32  MaxVisibleItems(UInt32 i);
       virtual int     SelectedIndex();
