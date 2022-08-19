@@ -615,6 +615,9 @@ namespace SmrFramework {
     return window;
     }
 
+  void Control::LostFocus() {
+    }
+
 #ifdef USEXFT
   XftFont* Control::_XftFont() {
     return xftfont;

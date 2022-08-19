@@ -501,6 +501,7 @@ class Control;
       virtual UInt32    Height();
       virtual UInt32    Height(UInt32 h);
       virtual void      Location(int x, int y);
+      virtual void      LostFocus();
       virtual void      SendCustomEvent(void* data, Byte len);
       virtual void      Size(int w, int h);
       virtual String    Tag();

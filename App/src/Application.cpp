@@ -186,7 +186,10 @@ Control* Application::Focus() {
   }
 
 Control* Application::Focus(Control* c) {
+  Control* current;
+  current = focus;
   focus = c;
+  if (current != NULL && current != c) current->LostFocus();
   return focus;
   }
 
