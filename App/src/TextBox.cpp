@@ -1,16 +1,4 @@
-/*
- *******************************************************************
- *** This software is copyright 1985-2014 by Michael H Riley     ***
- *** You have permission to use, modify, copy, and distribute    ***
- *** this software so long as this copyright notice is retained. ***
- *** This software may not be used in commercial applications    ***
- *** without express written permission from the author.         ***
- *******************************************************************
-*/
-
-
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include "SmrAppFramework.h"
 
@@ -30,6 +18,11 @@ TextBox::TextBox(Control* parent, int x, int y, int w, int h, const char* text) 
     else Control::Text(String(text).Substring(0,255));
   BackgroundColor(Color::RGB(0xffff, 0xffff, 0xffff));
   textChangedHandler = NULL;
+//font = String("-adobe-helvetica-medium-r-*-*-*-*-*-*-*-*-*-*");
+  pos = 0;
+  cursor_x = 0;
+  hasFocus = false;
+  _setupFont();
   }
 
 TextBox::TextBox(Control* parent, int x, int y, int w, int h) :
@@ -45,36 +38,223 @@ TextBox::TextBox(Control* parent, int x, int y, int w, int h) :
   Control::Text("");
   BackgroundColor(Color::RGB(0xffff, 0xffff, 0xffff));
   textChangedHandler = NULL;
+//font = String("-adobe-helvetica-medium-r-*-*-*-*-*-*-*-*-*-*");
+  pos = 0;
+  cursor_x = 0;
+  hasFocus = false;
+  _setupFont();
   }
 
 TextBox::~TextBox() {
   if (textChangedHandler != NULL) delete(textChangedHandler);
   }
 
+void TextBox::_setupFont() {
+  UInt32 i;
+  XFontStruct*  font;
+  if (this->font.Length() == 0) font = XLoadQueryFont(display, "fixed");
+    else font = XLoadQueryFont(display, this->font.AsCharArray());
+  if (font == NULL) font = XLoadQueryFont(display, "fixed");
+  ascent = font->max_bounds.ascent;
+  descent = font->max_bounds.descent;
+  for (i=0; i<255; i++) widths[i] = font->max_bounds.width;
+  if (font->per_char != NULL) {
+    for (i=font->min_char_or_byte2; i<=font->max_char_or_byte2; i++) {
+      if (font->per_char[i].width == 0)
+        widths[i] = font->max_bounds.width;
+      else
+        widths[i] = font->per_char[i].width;
+      }
+    }
+  }
+
+String TextBox::Text() {
+  return text;
+  }
+
+String TextBox::Text(const char* text) {
+  if (text == NULL) {
+    this->text = Text(String());
+    }
+  if (strlen(text)<=255) this->text = String(text);
+    else this->text = String(text).Substring(0,255);
+  pos = this->text.Length();
+  _updateCursorPosition();
+  Redraw();
+  return this->text;
+  }
+
+String TextBox::Text(String text) {
+  if (text.Length() < maxLen) this->text = String(text);
+    else this->text = text.Substring(0, 255);
+  pos = this->text.Length();
+  _updateCursorPosition();
+  Redraw();
+  return this->text;
+  }
+
+  void TextBox::Redraw() {
+#ifdef USEXFT
+#else
+    GC            gc;
+    XGCValues     values;
+    XFontStruct*  font;
+    unsigned long mask;
+#endif
+    int           xoffset;
+    int           yoffset;
+    if (!visible) return;
+    XClearWindow(display, window);
+    if (enabled) {
+#ifdef USEXFT
+      XftTextExtents8(display, xftfont, (const FcChar8*)text.AsCharArray(), text.Length(), &ginfo);
+      yoffset = height / 2 - ginfo.height / 2;
+      if (align == CENTER)
+        xoffset = width / 2 - ginfo.width / 2;
+      if (align == LEFT)
+        xoffset = 5;
+      if (align == RIGHT)
+        xoffset = (width - ginfo.width) - 5;
+      XftDrawString8(xftdrawable, &xftcolor, xftfont, ginfo.x+xoffset+textOffsetX,ginfo.y+yoffset+textOffsetY,
+                    (const FcChar8*)text.AsCharArray(),text.Length());
+
+  #else
+      if (this->font.Length() == 0) font = XLoadQueryFont(display, "fixed");
+        else font = XLoadQueryFont(display, this->font.AsCharArray());
+      if (font == NULL) font = XLoadQueryFont(display, "fixed");
+      values.line_width = 1;
+      values.foreground = foregroundColor;
+      values.background = backgroundColor;
+      values.font = font->fid;
+      mask = GCLineWidth | GCForeground | GCBackground | GCFont;
+      gc = XCreateGC(display, window, mask, &values);
+      yoffset = (height - (font->ascent + font->descent)) / 2 + font->descent;
+      if (align == CENTER)
+        xoffset = (width - XTextWidth(font, text.AsCharArray(), text.Length())) / 2;
+      if (align == LEFT)
+        xoffset = 5;
+      if (align == RIGHT)
+        xoffset = (width - XTextWidth(font, text.AsCharArray(), text.Length())) - 5;
+      text_x = xoffset + textOffsetX;
+      XDrawString(display,window,gc, text_x,height-yoffset+textOffsetY,text.AsCharArray(),text.Length());
+      if (this == application->Focus() || (application->Focus() == NULL && hasFocus)) {
+        XDrawLine(display, window, gc, text_x+cursor_x,height-yoffset+textOffsetY-ascent,
+                                       text_x+cursor_x,height-yoffset+textOffsetY+descent+2);
+        XDrawLine(display, window, gc, text_x+cursor_x-2,height-yoffset+textOffsetY-ascent-1,
+                                       text_x+cursor_x-0,height-yoffset+textOffsetY-ascent-1);
+        XDrawLine(display, window, gc, text_x+cursor_x+1,height-yoffset+textOffsetY-ascent-1,
+                                       text_x+cursor_x+3,height-yoffset+textOffsetY-ascent-1);
+        XDrawLine(display, window, gc, text_x+cursor_x-2,height-yoffset+textOffsetY+descent+2,
+                                       text_x+cursor_x-0,height-yoffset+textOffsetY+descent+2);
+        XDrawLine(display, window, gc, text_x+cursor_x+1,height-yoffset+textOffsetY+descent+2,
+                                       text_x+cursor_x+3,height-yoffset+textOffsetY+descent+2);
+        }
+      XFreeGC(display, gc);
+      XFreeFont(display, font);
+#endif
+      }
+    }
+
+void TextBox::_updateCursorPosition() {
+  int i;
+  int c;
+  int x;
+  x = 0;
+  i = 0;
+  c = pos;
+  while (c != 0) {
+    x += widths[(int)(text.CharAt(i++))];
+    c--;
+    }
+  cursor_x = x;
+  }
+
+void TextBox::EnterEvent(int x, int y) {
+  hasFocus = true;
+  Redraw();
+  }
+
+void TextBox::LeaveEvent(int x, int y) {
+  hasFocus = false;
+  Redraw();
+  }
+
+
 void TextBox::MouseDownEvent(int x, int y, int button) {
+  int p;
+  int w;
+  unsigned int c;
   Control::MouseDownEvent(x, y, button);
-printf("Text box mouse down\n");
+  x -= text_x;
+  if (x < 0) x = 0;
+  c = 0;
+  p = 0;
+  w = 0;
+  if (text.Length() > 0) {
+    w = widths[(int)(text.CharAt(c))] / 2;
+    if (w < 1) w = 1;
+    }
+  while (c < text.Length() && x < (int)width-5 && x > p+w) {
+    c++;
+    if (c < text.Length()) {
+      w = widths[(int)(text.CharAt(c))] / 2;
+      p += widths[(int)(text.CharAt(c-1))];
+      }
+    }
+  pos = c;
+  _updateCursorPosition();
   application->Focus(this);
+  Redraw();
   }
 
 void TextBox::KeyUpEvent(KeySym key, XComposeStatus status) {
   String tmp;
+  char   buffer[1024];
   if (readOnly) return;
+  if (key == XK_KP_0) key = '0';
+  if (key == XK_KP_1) key = '1';
+  if (key == XK_KP_2) key = '2';
+  if (key == XK_KP_3) key = '3';
+  if (key == XK_KP_4) key = '4';
+  if (key == XK_KP_5) key = '5';
+  if (key == XK_KP_6) key = '6';
+  if (key == XK_KP_7) key = '7';
+  if (key == XK_KP_8) key = '8';
+  if (key == XK_KP_9) key = '9';
+  if (key == XK_KP_Decimal) key = '.';
+  if (key == XK_KP_Divide) key = '/';
+  if (key == XK_KP_Multiply) key = '*';
+  if (key == XK_KP_Add) key = '+';
+  if (key == XK_KP_Subtract) key = '-';
   switch (key) {
-    case XK_KP_Enter:
-         printf("Kp Enter Pressed\n");
-         application->Focus(NULL);
-         break;
     case XK_Return:
-         printf("Enter Pressed\n");
+    case XK_KP_Enter:
          application->Focus(NULL);
+         Redraw();
          break;
     case XK_BackSpace:
-         if (text.Length() > 0) {
-           text = text.Substring(0, text.Length() - 1);
-           if (this->textChangedHandler != NULL)
-             textChangedHandler->Call(this, KeyEventArgs((int)key));
-           Redraw();
+         if (pos > 0) {
+           if (text.Length() > 0) {
+             if (pos >= (Int32)text.Length()) {
+               text = text.Substring(0, text.Length() - 1);
+               pos--;
+               }
+             else if (pos == 1) {
+               text = text.Substring(1);
+               pos--;
+               }
+             else {
+               strncpy(buffer, text.AsCharArray(), pos-1);
+               buffer[pos-1] = 0;
+               strcat(buffer, text.AsCharArray()+pos);
+               text = String(buffer);
+               pos--;
+               }
+             if (this->textChangedHandler != NULL)
+               textChangedHandler->Call(this, KeyEventArgs((int)key));
+             _updateCursorPosition();
+             Redraw();
+             }
            }
          break;
     case XK_Escape:
@@ -84,45 +264,80 @@ void TextBox::KeyUpEvent(KeySym key, XComposeStatus status) {
          printf("Tab Pressed\n");
          break;
     case XK_Home:
-         printf("Home Pressed\n");
+    case XK_KP_Home:
+         pos = 0;
+         _updateCursorPosition();
+         Redraw();
          break;
     case XK_End:
-         printf("End Pressed\n");
-         break;
-    case XK_Page_Up:
-         printf("Page up Pressed\n");
-         break;
-    case XK_Page_Down:
-         printf("Page down Pressed\n");
+    case XK_KP_End:
+         pos = text.Length();
+         _updateCursorPosition();
+         Redraw();
          break;
     case XK_Insert:
+    case XK_KP_Insert:
          printf("Insert Pressed\n");
          break;
     case XK_Delete:
-         printf("Delete Pressed\n");
-         break;
-    case XK_Up:
-         printf("Up arros Pressed\n");
-         break;
-    case XK_Down:
-         printf("Down arros Pressed\n");
+    case XK_KP_Delete:
+         if (pos < (Int32)text.Length() && text.Length() > 0) {
+           if (pos == 0) {
+             text = text.Substring(1);
+             }
+           else {
+             strncpy(buffer, text.AsCharArray(), pos);
+             buffer[pos] = 0;
+             strcat(buffer, text.AsCharArray() + pos + 1);
+             text = String(buffer);
+             }
+           if (this->textChangedHandler != NULL)
+             textChangedHandler->Call(this, KeyEventArgs((int)key));
+           _updateCursorPosition();
+           Redraw();
+           }
          break;
     case XK_Left:
-         printf("Left arros Pressed\n");
+    case XK_KP_Left:
+         if (pos > 0) pos--;
+         _updateCursorPosition();
+         Redraw();
          break;
     case XK_Right:
-         printf("Right arros Pressed\n");
+    case XK_KP_Right:
+         if (pos < (Int32)text.Length()) pos++;
+         _updateCursorPosition();
+         Redraw();
          break;
     default:
          if (key >= ' ' && key <= 255) {
            if (text.Length() < maxLen) {
              if (key >= 'a' && key <'z' && alphaCase == AlphaCaseUpper) key -= 32;
              if (key >= 'A' && key <'Z' && alphaCase == AlphaCaseLower) key += 32;
-             tmp = text.Append(key);
+             if (pos >= (int)text.Length()) {
+               tmp = text.Append(key);
+               pos++;
+               }
+             else {
+               if (pos == 0) {
+                 buffer[0] = key;
+                 buffer[1] = 0;
+                 strcat(buffer, text.AsCharArray());
+                 }
+               else {
+                 strncpy(buffer, text.AsCharArray(), pos);
+                 buffer[pos] = key;
+                 buffer[pos+1] = 0;
+                 strcat(buffer, text.AsCharArray() + pos);
+                 }
+               pos++;
+               tmp = String(buffer);
+               }
              if (valid(&tmp)) {
-               text = text.Append(key);
+               text = String(tmp);
                if (this->textChangedHandler != NULL)
                  textChangedHandler->Call(this, KeyEventArgs((int)key));
+               _updateCursorPosition();
                Redraw();
                }
              }
@@ -164,25 +379,6 @@ Boolean TextBox::ReadOnly() {
 Boolean TextBox::ReadOnly(Boolean b) {
   readOnly = b;
   return readOnly;
-  }
-
-String TextBox::Text() {
-  return text;
-  }
-
-String TextBox::Text(const char* text) {
-  if (text == NULL) {
-    Control::Text(String());
-    }
-  if (strlen(text)<=255) Control::Text(text);
-    else Control::Text(String(text).Substring(0,255));
-  return this->text;
-  }
-
-String TextBox::Text(String text) {
-  if (text.Length() < maxLen) Control::Text(text);
-    else Control::Text(text.Substring(0, 255));
-  return this->text;
   }
 
 Boolean TextBox::valid(String* t) {
@@ -265,5 +461,9 @@ Byte TextBox::Validation() {
 Byte TextBox::Validation(Byte b) {
   if (b <= 7) validation = b;
   return validation;
+  }
+
+void TextBox::LostFocus() {
+  Redraw();
   }
 
