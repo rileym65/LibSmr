@@ -18,7 +18,6 @@ TextBox::TextBox(Control* parent, int x, int y, int w, int h, const char* text) 
     else Control::Text(String(text).Substring(0,255));
   BackgroundColor(Color::RGB(0xffff, 0xffff, 0xffff));
   textChangedHandler = NULL;
-//font = String("-adobe-helvetica-medium-r-*-*-*-*-*-*-*-*-*-*");
   pos = 0;
   cursor_x = 0;
   hasFocus = false;
@@ -38,7 +37,6 @@ TextBox::TextBox(Control* parent, int x, int y, int w, int h) :
   Control::Text("");
   BackgroundColor(Color::RGB(0xffff, 0xffff, 0xffff));
   textChangedHandler = NULL;
-//font = String("-adobe-helvetica-medium-r-*-*-*-*-*-*-*-*-*-*");
   pos = 0;
   cursor_x = 0;
   hasFocus = false;
@@ -51,6 +49,21 @@ TextBox::~TextBox() {
 
 void TextBox::_setupFont() {
   UInt32 i;
+#ifdef USEXFT
+  int  height;
+  char buffer[2];
+  for (i=0; i<255; i++) widths[i] = 6;
+  height = 0;
+  for (i=32; i<127; i++) {
+    buffer[0] = i;
+    buffer[1] = 0;
+    XftTextExtents8(display, xftfont, (const FcChar8*)buffer, 1, &ginfo);
+    if (ginfo.height > height) height = ginfo.height;
+    widths[i] = ginfo.xOff;
+    }
+  ascent = height;
+  descent = 0;
+#else
   XFontStruct*  font;
   if (this->font.Length() == 0) font = XLoadQueryFont(display, "fixed");
     else font = XLoadQueryFont(display, this->font.AsCharArray());
@@ -66,6 +79,7 @@ void TextBox::_setupFont() {
         widths[i] = font->per_char[i].width;
       }
     }
+#endif
   }
 
 String TextBox::Text() {
@@ -94,12 +108,12 @@ String TextBox::Text(String text) {
   }
 
   void TextBox::Redraw() {
+    GC            gc;
+    unsigned long mask;
+    XGCValues     values;
 #ifdef USEXFT
 #else
-    GC            gc;
-    XGCValues     values;
     XFontStruct*  font;
-    unsigned long mask;
 #endif
     int           xoffset;
     int           yoffset;
@@ -108,15 +122,34 @@ String TextBox::Text(String text) {
     if (enabled) {
 #ifdef USEXFT
       XftTextExtents8(display, xftfont, (const FcChar8*)text.AsCharArray(), text.Length(), &ginfo);
-      yoffset = height / 2 - ginfo.height / 2;
+      yoffset = height / 2 - ascent / 2;
       if (align == CENTER)
         xoffset = width / 2 - ginfo.width / 2;
       if (align == LEFT)
         xoffset = 5;
       if (align == RIGHT)
         xoffset = (width - ginfo.width) - 5;
+      text_x = ginfo.x+xoffset + textOffsetX;
       XftDrawString8(xftdrawable, &xftcolor, xftfont, ginfo.x+xoffset+textOffsetX,ginfo.y+yoffset+textOffsetY,
                     (const FcChar8*)text.AsCharArray(),text.Length());
+      if (this == application->Focus() || (application->Focus() == NULL && hasFocus)) {
+        values.line_width = 1;
+        values.foreground = foregroundColor;
+        values.background = backgroundColor;
+        mask = GCLineWidth | GCForeground | GCBackground;
+        gc = XCreateGC(display, window, mask, &values);
+        XDrawLine(display, window, gc, text_x+cursor_x,height-2-yoffset+textOffsetY-ascent,
+                                       text_x+cursor_x,height-2-yoffset+textOffsetY+descent+2);
+        XDrawLine(display, window, gc, text_x+cursor_x-2,height-2-yoffset+textOffsetY-ascent-1,
+                                       text_x+cursor_x-0,height-2-yoffset+textOffsetY-ascent-1);
+        XDrawLine(display, window, gc, text_x+cursor_x+1,height-2-yoffset+textOffsetY-ascent-1,
+                                       text_x+cursor_x+3,height-2-yoffset+textOffsetY-ascent-1);
+        XDrawLine(display, window, gc, text_x+cursor_x-2,height-2-yoffset+textOffsetY+descent+2,
+                                       text_x+cursor_x-0,height-2-yoffset+textOffsetY+descent+2);
+        XDrawLine(display, window, gc, text_x+cursor_x+1,height-2-yoffset+textOffsetY+descent+2,
+                                       text_x+cursor_x+3,height-2-yoffset+textOffsetY+descent+2);
+        XFreeGC(display, gc);
+        }
 
   #else
       if (this->font.Length() == 0) font = XLoadQueryFont(display, "fixed");
