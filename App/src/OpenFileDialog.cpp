@@ -9,6 +9,7 @@ Int32 OpenFileDialog::_fileDialogSorter(Object* a, Object* b) {
 
 OpenFileDialog::OpenFileDialog(Control *parent,int x, int y, int w, int h) :
             Dialog(parent, x, y, w, h) {
+  path = String("./");
   this->objectType = (char*)"Dialog";
   fileList = new ListBox(this, 10, 10, this->Width()-20, this->Height()-60);
   fileList->Visible(true);
@@ -45,6 +46,15 @@ DialogResult OpenFileDialog::ShowDialog() {
   return Dialog::ShowDialog();
   }
 
+String* OpenFileDialog::Path() {
+  return &path;
+  }
+
+String* OpenFileDialog::Path(String* s) {
+  path = String(s);
+  return &path;
+  }
+
 RegEx* OpenFileDialog::Pattern() {
   return pattern;
   }
@@ -58,7 +68,7 @@ void OpenFileDialog::refreshFiles() {
   UInt32 i;
   List<String*>* files;
   fileList->Clear();
-  files = Directory::GetFiles(".");
+  files = Directory::GetFiles(path.AsCharArray());
   if (files == NULL) {
     return;
     }

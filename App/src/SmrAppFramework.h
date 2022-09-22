@@ -1,7 +1,7 @@
 #ifndef _SMR_APP_FRAMEWORK_H
 #define _SMR_APP_FRAMEWORK_H
 
-#define USEXFT
+// #define USEXFT
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -804,6 +804,7 @@ class Control;
       Panel(Control* parent, int x, int y, int w, int h);
       virtual ~Panel();
       virtual void Add(Control* control);
+      virtual void Remove(Control* control);
       virtual int  ProcessEvent(XEvent event);
       virtual int  IsContainer();
       virtual void ProcessRadioButtons(RadioButton* trigger);
@@ -928,6 +929,7 @@ class OpenFileDialog : public Dialog {
     Button  *okButton;
     Button  *cancelButton;
     RegEx   *pattern;
+    String   path;
     void     refreshFiles();
     void     OkButtonReleased(void* sender, MouseEventArgs args);
     void     CancelButtonReleased(void* sender, MouseEventArgs args);
@@ -938,6 +940,8 @@ class OpenFileDialog : public Dialog {
     OpenFileDialog(Control* parent, int x, int y, int w, int h);
     virtual ~OpenFileDialog();
     virtual String* FileName();
+    virtual String* Path();
+    virtual String* Path(String* s);
     virtual RegEx*  Pattern();
     virtual RegEx*  Pattern(RegEx* r);
     virtual DialogResult ShowDialog();

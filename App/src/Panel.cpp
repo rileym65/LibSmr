@@ -41,6 +41,23 @@ namespace SmrFramework {
     controls[numControls-1] = control;
     }
 
+  void Panel::Remove(Control* control) {
+    int i;
+    int p;
+    p = -1;
+    for (i=0; i<numControls; i++)
+      if (controls[i] == control) p = i;
+    if (p < 0) return;
+    if (controls[p] != NULL) delete(controls[p]);
+    for (i=p; i<numControls-1; i++)
+      controls[i] = controls[i+1];
+    numControls--;
+    if (numControls == 0) {
+      free(controls);
+      controls = NULL;
+      }
+    }
+
   int Panel::ProcessEvent(XEvent event) {
     int i;
     if (event.xany.window == window) {
