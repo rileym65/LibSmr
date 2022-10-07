@@ -1,3 +1,4 @@
+#include <stdio.h>
 /*
  *******************************************************************
  *** This software is copyright 1985-2014 by Michael H Riley     ***
@@ -24,8 +25,7 @@ namespace SmrFramework {
     }
   
   void StopWatch::Restart() {
-    startTime = DateTime::Now();
-    running = true;
+    Start();
     }
 
   Boolean StopWatch::Running() {
