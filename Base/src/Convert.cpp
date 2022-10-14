@@ -1583,7 +1583,11 @@ namespace SmrFramework {
   Dword Convert::ToDword(const char* value) {
     Int64 tmp;
     if (value == NULL) throw NullException(NULL, "Value is null");
+#ifdef IS64BIT
+    sscanf(value,"%ld",&tmp);
+#else
     sscanf(value,"%lld",&tmp);
+#endif
     if (tmp > 0xffffffff) throw RangeException(NULL, "Range outside 0 to 4294967295");
     return (Dword)tmp;
     }
@@ -1673,7 +1677,11 @@ namespace SmrFramework {
   Qword Convert::ToQword(const char* value) {
     Int64 tmp;
     if (value == NULL) throw NullException(NULL, "Value is null");
+#ifdef IS64BIT
+    sscanf(value,"%ld",&tmp);
+#else
     sscanf(value,"%lld",&tmp);
+#endif
     if (tmp < 0) throw RangeException(NULL, "Range error");
     return (Qword)tmp;
     }
@@ -2157,7 +2165,11 @@ namespace SmrFramework {
   char* Convert::ToCharArray(UInt64 value) {
     char* ret;
     char buffer[32];
+#ifdef IS64BIT
+    sprintf(buffer,"%lu",value);
+#else
     sprintf(buffer,"%llu",value);
+#endif
     ret = (char*)malloc(strlen(buffer) + 1);
     if (ret == NULL) throw InvalidOpException(NULL, "Could not allocate memory");
     strcpy(ret, buffer);
@@ -2197,7 +2209,11 @@ namespace SmrFramework {
   char* Convert::ToCharArray(Int64 value) {
     char* ret;
     char buffer[32];
+#ifdef IS64BIT
+    sprintf(buffer,"%ld",value);
+#else
     sprintf(buffer,"%lld",value);
+#endif
     ret = (char*)malloc(strlen(buffer) + 1);
     if (ret == NULL) throw InvalidOpException(NULL, "Could not allocate memory");
     strcpy(ret, buffer);
@@ -2293,7 +2309,11 @@ namespace SmrFramework {
 
   char* Convert::ToCharArray(UInt64 value,char* dest,UInt32 maxLen) {
     char buffer[32];
+#ifdef IS64BIT
+    sprintf(buffer,"%lu",value);
+#else
     sprintf(buffer,"%llu",value);
+#endif
     if (strlen(buffer)+1 > maxLen) throw InvalidOpException(NULL, "Buffer too small");
     strcpy(dest, buffer);
     return dest;
@@ -2325,7 +2345,11 @@ namespace SmrFramework {
 
   char* Convert::ToCharArray(Int64 value,char* dest,UInt32 maxLen) {
     char buffer[32];
+#ifdef IS64BIT
+    sprintf(buffer,"%ld",value);
+#else
     sprintf(buffer,"%lld",value);
+#endif
     if (strlen(buffer)+1 > maxLen) throw InvalidOpException(NULL, "Buffer too small");
     strcpy(dest, buffer);
     return dest;

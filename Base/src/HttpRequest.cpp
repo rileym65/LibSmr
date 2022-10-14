@@ -13,7 +13,6 @@
 using namespace SmrFramework;
 
 HttpRequest::HttpRequest(const char* uri, int p) {
-int i;
   char    temp[2048];
   char    buffer[2048];
   Boolean flag;
@@ -60,7 +59,7 @@ int i;
   }
 
 HttpRequest::~HttpRequest() {
-  int i;
+  UInt32 i;
   delete(host);
   delete(uri);
   for (i=0; i<requestHeaders->Count(); i++)
@@ -125,7 +124,7 @@ Boolean HttpRequest::Debug(Boolean b) {
 
 int HttpRequest::Send(const char* message) {
   int     i;
-  int     sock;
+//  int     sock;
   int     status;
   Socket *client;
   char    msg[65536];
@@ -138,8 +137,8 @@ int HttpRequest::Send(const char* message) {
   Boolean flag;
   Boolean chunked;
   char buffer[256];
-  struct hostent *host_ptr;
-  struct sockaddr_in addr;
+//  struct hostent *host_ptr;
+//  struct sockaddr_in addr;
 // printf("in HttpRequest::Send\n"); fflush(stdout);
   if (body != NULL) {
     delete(body);
@@ -152,9 +151,9 @@ int HttpRequest::Send(const char* message) {
   strcat(msg, "Host: ");
   strcat(msg, host->AsCharArray());
   strcat(msg, "\r\n");
-  sprintf(buffer,"Content-Length: %d\r\n",strlen(message));
+  sprintf(buffer,"Content-Length: %lu\r\n",strlen(message));
   strcat(msg, buffer);
-  for (i=0; i<requestHeaders->Count(); i++) {
+  for (i=0; (UInt32)i<requestHeaders->Count(); i++) {
     strcat(msg, requestHeaders->At(i)->AsCharArray());
     strcat(msg, ": ");
     strcat(msg, requestHeaderValues->At(i)->AsCharArray());

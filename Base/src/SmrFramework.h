@@ -10,6 +10,14 @@
 #include <exception>
 #include <termios.h>
 
+#ifdef __GNUC__
+#ifdef __x86_64__
+#define IS64BIT
+#else
+#define IS32BIT
+#endif
+#endif
+
 namespace SmrFramework {
 
   typedef int8_t    Int8;
