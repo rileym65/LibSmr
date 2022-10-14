@@ -480,6 +480,7 @@ namespace SmrFramework {
 
   TextFont*  Control::Font(TextFont* f) {
     font = f;
+    Redraw();
     return font;
     }
 
