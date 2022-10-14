@@ -104,7 +104,7 @@ typedef struct {
   Byte   approx;
   } JFIF_SPECTRAL;
 
-typedef long BLOCK[8][8];
+typedef Int32 BLOCK[8][8];
 
 typedef struct {
   Byte*          y;                 /* Storage for decoded y component */
@@ -132,14 +132,14 @@ typedef struct {
   Byte           acTable;           /* ac huffman table for component */
   Dword          mcusX;             /* number of horizontal mcus */
   Dword          mcusY;             /* number of vertical mcus */
-  long*          lastDC;            /* pointer to component lastDC */
-  long           lastDCY;           /* last DC for Y component */
-  long           lastDCCb;          /* last DC for Cb component */
-  long           lastDCCr;          /* last DC for Cr component */
+  Int32*          lastDC;            /* pointer to component lastDC */
+  Int32           lastDCY;           /* last DC for Y component */
+  Int32           lastDCCb;          /* last DC for Cb component */
+  Int32           lastDCCr;          /* last DC for Cr component */
   Byte           numScanComps;      /* number of components in scan */
   Byte           frameType;         /* jpeg frame type */
-  long           eobRun;            /* remaining blocks in eob run */
-  long           zeroRun;           /* remaining coefficients in zero run */
+  Int32           eobRun;            /* remaining blocks in eob run */
+  Int32           zeroRun;           /* remaining coefficients in zero run */
   Dword          restartInt;        /* last restart interval */
   Dword          mcuCount;          /* Count of mcus processed */
   Byte           restartMarker;     /* last read restart marker */
@@ -157,7 +157,7 @@ typedef struct {
 /* ********************************************** */
 /* **** Matrix for dct, left shifted 11 bits **** */
 /* ********************************************** */
-long dct[8][8] = { {  724,  724,  724,  724, 724, 724, 724,  724 },
+Int32 dct[8][8] = { {  724,  724,  724,  724, 724, 724, 724,  724 },
                    { 1004,  851,  569,  200,-199,-568,-850,-1003 },
                    {  946,  392, -391, -945,-945,-391, 392,  946 },
                    {  851, -199,-1003, -568, 569,1004, 200, -850 },
@@ -166,7 +166,7 @@ long dct[8][8] = { {  724,  724,  724,  724, 724, 724, 724,  724 },
                    {  392, -945,  946, -391,-391, 946,-945,  392 },
                    {  200, -568,  851,-1003,1004,-850, 569, -199 } };
 
-long tdct[8][8] = {{ 724, 1004, 946,  851, 724,  569, 392,  200 },
+Int32 tdct[8][8] = {{ 724, 1004, 946,  851, 724,  569, 392,  200 },
                    { 724,  851, 392, -199,-723,-1003,-945, -568 },
                    { 724,  569,-391,-1003,-723,  200, 946,  851 },
                    { 724,  200,-945, -568, 724,  851,-391,-1003 },
@@ -175,7 +175,7 @@ long tdct[8][8] = {{ 724, 1004, 946,  851, 724,  569, 392,  200 },
                    { 724, -850, 392,  200,-723, 1004,-945,  569 },
                    { 724,-1003, 946, -850, 724, -568, 392, -199 } };
 
-long yqt[8][8] = { { 16, 11, 10, 16, 24, 40, 51, 61 },
+Int32 yqt[8][8] = { { 16, 11, 10, 16, 24, 40, 51, 61 },
                    { 12, 12, 14, 19, 26, 58, 60, 55 },
                    { 14, 13, 16, 24, 40, 57, 69, 56 },
                    { 14, 17, 22, 29, 51, 87, 80, 62 },
@@ -184,7 +184,7 @@ long yqt[8][8] = { { 16, 11, 10, 16, 24, 40, 51, 61 },
                    { 49, 64, 78, 87,103,121,120,101 },
                    { 72, 92, 95, 98,112,100,103, 99 } };
 
-long cqt[8][8] = { { 17, 18, 24, 47, 99, 99, 99, 99 },
+Int32 cqt[8][8] = { { 17, 18, 24, 47, 99, 99, 99, 99 },
                    { 18, 21, 26, 66, 99, 99, 99, 99 },
                    { 24, 26, 56, 99, 99, 99, 99, 99 },
                    { 47, 66, 99, 99, 99, 99, 99, 99 },
@@ -288,7 +288,7 @@ Word _readSize(Stream* fildes) {
 /* ********************************* */
 /* **** Multiply 2 8x8 matrices **** */
 /* ********************************* */
-void _mulmatrix(long a[8][8],long b[8][8],long c[8][8]) {
+void _mulmatrix(Int32 a[8][8],Int32 b[8][8],Int32 c[8][8]) {
   int x,y;
   int i;
   double temp;
@@ -306,13 +306,13 @@ void _mulmatrix(long a[8][8],long b[8][8],long c[8][8]) {
 /* **** Function to decode a progressive data block **** */
 /* ***************************************************** */
 void _decodeProgDataBlock(JPEG* jpeg,BitStream* stream,int comp,int dx,int dy) {
-  long offset;
+  Int32 offset;
   BLOCK* dataunit;
   Dword  code;
   Dword  bits;
   Dword  bits2;
-  long   dc;
-  long   ac;
+  Int32   dc;
+  Int32   ac;
   int    j;
   Byte   approx;
 
@@ -491,8 +491,8 @@ void _decodeDataBlock(JPEG* jpeg,BitStream* stream,int comp,int dx,int dy) {
   int    x2,y2;
   Dword  code;
   Dword  bits;
-  long   dc;
-  long   ac;
+  Int32   dc;
+  Int32   ac;
   Byte*  dest;
   BLOCK  dataUnit;
   BLOCK  samples;
