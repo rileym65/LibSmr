@@ -23,6 +23,7 @@ namespace SmrFramework {
     char buffer[2];
 #endif
     this->objectType = (char*)"Font";
+    this->name = new String(name);
     display = application->GetDisplay();
 #ifdef USEXFT
     xftfont = XftFontOpenName(display, DefaultScreen(display), name);
@@ -57,6 +58,7 @@ namespace SmrFramework {
 
   TextFont::~TextFont() {
     Display* display;
+    delete(name);
     display = application->GetDisplay();
 #ifdef USEXFT
     if (xftfont != NULL) XftFontClose(display, xftfont);
@@ -91,6 +93,10 @@ XGlyphInfo TextFont::GlyphInfo() {
 
 Byte* TextFont::Widths() {
   return widths;
+  }
+
+String* TextFont::Name() {
+  return name;
   }
 
   }
