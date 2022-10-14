@@ -21,7 +21,6 @@ TextBox::TextBox(Control* parent, int x, int y, int w, int h, const char* text) 
   pos = 0;
   cursor_x = 0;
   hasFocus = false;
-  _setupFont();
   }
 
 TextBox::TextBox(Control* parent, int x, int y, int w, int h) :
@@ -40,46 +39,10 @@ TextBox::TextBox(Control* parent, int x, int y, int w, int h) :
   pos = 0;
   cursor_x = 0;
   hasFocus = false;
-  _setupFont();
   }
 
 TextBox::~TextBox() {
   if (textChangedHandler != NULL) delete(textChangedHandler);
-  }
-
-void TextBox::_setupFont() {
-  UInt32 i;
-#ifdef USEXFT
-  int  height;
-  char buffer[2];
-  for (i=0; i<255; i++) widths[i] = 6;
-  height = 0;
-  for (i=32; i<127; i++) {
-    buffer[0] = i;
-    buffer[1] = 0;
-    XftTextExtents8(display, xftfont, (const FcChar8*)buffer, 1, &ginfo);
-    if (ginfo.height > height) height = ginfo.height;
-    widths[i] = ginfo.xOff;
-    }
-  ascent = height;
-  descent = 0;
-#else
-  XFontStruct*  font;
-  if (this->font.Length() == 0) font = XLoadQueryFont(display, "fixed");
-    else font = XLoadQueryFont(display, this->font.AsCharArray());
-  if (font == NULL) font = XLoadQueryFont(display, "fixed");
-  ascent = font->max_bounds.ascent;
-  descent = font->max_bounds.descent;
-  for (i=0; i<255; i++) widths[i] = font->max_bounds.width;
-  if (font->per_char != NULL) {
-    for (i=font->min_char_or_byte2; i<=font->max_char_or_byte2; i++) {
-      if (font->per_char[i].width == 0)
-        widths[i] = font->max_bounds.width;
-      else
-        widths[i] = font->per_char[i].width;
-      }
-    }
-#endif
   }
 
 String TextBox::Text() {
@@ -112,6 +75,7 @@ String TextBox::Text(String text) {
     unsigned long mask;
     XGCValues     values;
 #ifdef USEXFT
+    XftFont      *fontObj;
 #else
     XFontStruct*  font;
 #endif
@@ -121,7 +85,11 @@ String TextBox::Text(String text) {
     XClearWindow(display, window);
     if (enabled) {
 #ifdef USEXFT
-      XftTextExtents8(display, xftfont, (const FcChar8*)text.AsCharArray(), text.Length(), &ginfo);
+      XGlyphInfo ginfo;
+      fontObj = font->FontObject();
+      ascent = font->Ascent();
+      descent = font->Descent();
+      XftTextExtents8(display, fontObj, (const FcChar8*)text.AsCharArray(), text.Length(), &ginfo);
       yoffset = height / 2 - ascent / 2;
       if (align == CENTER)
         xoffset = width / 2 - ginfo.width / 2;
@@ -130,7 +98,7 @@ String TextBox::Text(String text) {
       if (align == RIGHT)
         xoffset = (width - ginfo.width) - 5;
       text_x = ginfo.x+xoffset + textOffsetX;
-      XftDrawString8(xftdrawable, &xftcolor, xftfont, ginfo.x+xoffset+textOffsetX,ginfo.y+yoffset+textOffsetY,
+      XftDrawString8(xftdrawable, &xftcolor, fontObj, ginfo.x+xoffset+textOffsetX,ginfo.y+yoffset+textOffsetY,
                     (const FcChar8*)text.AsCharArray(),text.Length());
       if (this == application->Focus() || (application->Focus() == NULL && hasFocus)) {
         values.line_width = 1;
@@ -195,8 +163,10 @@ void TextBox::_updateCursorPosition() {
   x = 0;
   i = 0;
   c = pos;
+  Byte* w;
+  w = font->Widths();
   while (c != 0) {
-    x += widths[(int)(text.CharAt(i++))];
+    x += w[(int)(text.CharAt(i++))];
     c--;
     }
   cursor_x = x;
@@ -217,7 +187,9 @@ void TextBox::MouseDownEvent(int x, int y, int button) {
   int p;
   int w;
   unsigned int c;
+  Byte* widths;
   Control::MouseDownEvent(x, y, button);
+  widths = font->Widths();
   x -= text_x;
   if (x < 0) x = 0;
   c = 0;
@@ -499,4 +471,5 @@ Byte TextBox::Validation(Byte b) {
 void TextBox::LostFocus() {
   Redraw();
   }
+
 

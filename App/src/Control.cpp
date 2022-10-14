@@ -65,19 +65,17 @@ namespace SmrFramework {
     XSelectInput(display, window, inputMask);
     XGetWindowAttributes(display, window, &winattr);
     screen = DefaultScreen(display);
+    if (this->parent != NULL && this->parent->Font() != NULL)
+      font = this->parent->Font();
+    else
+      font = application->Font();
+
 #ifdef USEXFT
     this->xftcolor.pixel = this->foregroundColor;
     this->xftcolor.color.red = 0x0000;
     this->xftcolor.color.green = 0x0000;
     this->xftcolor.color.blue = 0x0000;
     this->xftcolor.color.alpha = 0xffff;
-    this->xftfont = NULL;
-    if (this->parent != NULL) {
-      if (this->parent->_XftFont() != NULL)
-        xftfont = this->parent->_XftFont();
-      }
-    if (this->xftfont == NULL) this->xftfont = XftFontOpenName(display, screen, "FreeSans-10");
-    if (this->xftfont == NULL) throw InvalidOpException(this, "Could not open font");
     xftdrawable = XftDrawCreate(display, window, winattr.visual, winattr.colormap);
     if (xftdrawable == NULL) throw InvalidOpException(this, "Could not get drawable");
 
@@ -97,9 +95,6 @@ namespace SmrFramework {
     if (disabledPixmap != 0) XFreePixmap(display, disabledPixmap);
     if (cursor != 0xffffffff) XFreeCursor(display, cursor);
 #ifdef USEXFT
-    if (xftfont != NULL && parent != NULL) {
-      if (xftfont != parent->_XftFont()) XftFontClose(display, xftfont);
-      }
     if (xftdrawable != NULL) XftDrawDestroy(xftdrawable);
 #endif
     XDestroyWindow(display, window);
@@ -479,28 +474,13 @@ namespace SmrFramework {
   void   Control::Redraw() {
     }
 
-  String  Control::Font() {
+  TextFont*  Control::Font() {
     return font;
     }
 
-  String  Control::Font(const char* font) {
-    this->font = String(font);
-#ifdef USEXFT
-    if (xftfont != NULL) XftFontClose(display, xftfont);
-    xftfont = XftFontOpenName(display, screen, font);
-    if (xftfont == NULL) this->xftfont = XftFontOpenName(display, screen, "FreeSans-10");
-    if (xftfont == NULL) throw InvalidOpException(this, "Could not open font");
-#endif
-    Redraw();
+  TextFont*  Control::Font(TextFont* f) {
+    font = f;
     return font;
-    }
-
-  String Control::Font(String s) {
-    return Font(s.AsCharArray());
-    }
-
-  String Control::Font(String* s) {
-    return Font(s->AsCharArray());
     }
 
   void   Control::Location(int x, int y) {
@@ -619,9 +599,6 @@ namespace SmrFramework {
     }
 
 #ifdef USEXFT
-  XftFont* Control::_XftFont() {
-    return xftfont;
-    }
 
   XftDraw* Control::_XftDrawable() {
     return xftdrawable;
@@ -631,9 +608,6 @@ namespace SmrFramework {
     return xftcolor;
     }
 
-  XGlyphInfo Control::_Ginfo() {
-    return ginfo;
-    }
 #endif
 
   }

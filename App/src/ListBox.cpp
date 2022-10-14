@@ -206,9 +206,7 @@ namespace SmrFramework {
     if (!visible) return;
     XSetWindowBackground(display, window, backgroundColor);
     XClearWindow(display, window);
-    if (this->font.Length() == 0) font = XLoadQueryFont(display, "fixed");
-      else font = XLoadQueryFont(display, this->font.AsCharArray());
-    if (font == NULL) font = XLoadQueryFont(display, "fixed");
+    font = XLoadQueryFont(display, "fixed");
     values.line_width = 1;
     values.foreground = foregroundColor;
     values.background = backgroundColor;

@@ -330,6 +330,31 @@ class Control;
       static u_int32_t YellowGreen();
     };
 
+  class TextFont : public Object {
+    protected:
+      int  ascent;
+      int  descent;
+#ifdef USEXFT
+      XftFont   *xftfont;
+      XGlyphInfo ginfo;
+#else
+      XFontStruct *xfont;
+#endif
+      Byte widths[256];
+    public:
+      TextFont(const char* name);
+      ~TextFont();
+#ifdef USEXFT
+      XftFont *FontObject();
+      XGlyphInfo GlyphInfo();
+#else
+      XFontStruct *FontObject();
+#endif
+      int          Ascent();
+      int          Descent();
+      Byte*        Widths();
+    };
+
   class Graphics : public Object {
     protected:
       Display     *display;
@@ -449,7 +474,7 @@ class Control;
       UInt32    borderColor;
       long      inputMask;
       String    text;
-      String    font;
+      TextFont *font;
       Image    *backgroundImage;
       Pixmap    backgroundPixmap;
       Image    *disabledImage;
@@ -457,10 +482,10 @@ class Control;
       String    tag;
       Cursor    cursor;
 #ifdef USEXFT
-      XftFont   *xftfont;
+//      XftFont   *xftfont;
       XftDraw   *xftdrawable;
       XftColor   xftcolor;
-      XGlyphInfo ginfo;
+//      XGlyphInfo ginfo;
 #endif
       EventHandler* mouseDownHandler;
       EventHandler* mouseUpHandler;
@@ -491,10 +516,8 @@ class Control;
       virtual void      BringToFront();
       virtual Boolean   Enabled();
       virtual Boolean   Enabled(Boolean b);
-      virtual String    Font();
-      virtual String    Font(const char* font);
-      virtual String    Font(String font);
-      virtual String    Font(String* font);
+      virtual TextFont *Font();
+      virtual TextFont *Font(TextFont* f);
       virtual UInt32    ForegroundColor();
       virtual UInt32    ForegroundColor(int red, int green, int blue);
       virtual UInt32    ForegroundColor(UInt32 pixel);
@@ -547,10 +570,8 @@ class Control;
       virtual Display*  _Display();
       virtual Window    _Window();
 #ifdef USEXFT
-      virtual XftFont*   _XftFont();
       virtual XftDraw*   _XftDrawable();
       virtual XftColor   _XftColor();
-      virtual XGlyphInfo _Ginfo();
 #endif
       };
   
@@ -590,7 +611,6 @@ class Control;
     int  descent;
     Boolean hasFocus;
     void _updateCursorPosition();
-    void _setupFont();
   public:
     static const Byte ValidationNone = 0;
     static const Byte ValidationInt = 1;
@@ -986,6 +1006,7 @@ class OpenFileDialog : public Dialog {
       Timer  **timers;
       UInt32   numTimers;
       UInt32   loopDelay;
+      TextFont *font;
     public:
       int      red_mask;
       int      green_mask;
@@ -1002,6 +1023,7 @@ class OpenFileDialog : public Dialog {
       virtual void     DoEvents();
       virtual Control* Focus();
       virtual Control* Focus(Control* c);
+      virtual TextFont* Font();
       virtual void     Init();
       virtual UInt32   LoopDelay();
       virtual UInt32   LoopDelay(UInt32 i);

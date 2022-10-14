@@ -27,6 +27,7 @@ OBJS = \
 	DropDownList.o \
 	EventArgs.o \
 	EventHandler.o \
+	Font.o \
 	Form.o \
 	Graphics.o \
 	GroupBox.o \
@@ -108,6 +109,7 @@ DialogResult.o:        $(HEADERS) DialogResult.cpp
 DropDownList.o:        $(HEADERS) DropDownList.cpp
 EventArgs.o:           $(HEADERS) EventArgs.cpp
 Eventhandler.o:        $(HEADERS) EventHandler.cpp
+Font.o:                $(HEADERS) Font.cpp
 Form.o:                $(HEADERS) Form.cpp
 Graphics.o:            $(HEADERS) Graphics.cpp
 GroupBox.o:            $(HEADERS) GroupBox.cpp

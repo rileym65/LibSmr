@@ -20,6 +20,7 @@ Application* application;
 
 Application::Application() {
   char *displayname;
+  application = this;
   this->objectType = (char*)"Application";
   displayname = getenv("DISPLAY");
   focus = NULL;
@@ -27,9 +28,9 @@ Application::Application() {
     else display = XOpenDisplay(":0.0");
   XGetWindowAttributes(display, RootWindow(display, DefaultScreen(display)), &screenAttributes);
   getColorMapping();
+  font = new TextFont("FreeSans-10");
   forms = NULL;
   numForms = 0;
-  application = this;
   timers = NULL;
   numTimers = 0;
   loopDelay = 1000;
@@ -179,6 +180,10 @@ void Application::RemoveForm(Form* f) {
   }
 
 void Application::Init() {
+  }
+
+TextFont* Application::Font() {
+  return font;
   }
 
 Control* Application::Focus() {

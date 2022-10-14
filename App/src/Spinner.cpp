@@ -118,10 +118,11 @@ namespace SmrFramework {
     if (controlLine < 20) controlLine = 20;
     controlLine = width - controlLine;
 #ifdef USEXFT
-    XftTextExtents8(display, xftfont, (const FcChar8*)buffer, strlen(buffer), &ginfo);
+    XGlyphInfo ginfo;
+    XftTextExtents8(display, font->FontObject(), (const FcChar8*)buffer, strlen(buffer), &ginfo);
     yoffset = height / 2 - ginfo.height / 2;
     xoffset = (width - height) / 2 - ginfo.width / 2;
-    XftDrawString8(xftdrawable, &xftcolor, xftfont, ginfo.x+xoffset,ginfo.y+yoffset,
+    XftDrawString8(xftdrawable, &xftcolor, font->FontObject(), ginfo.x+xoffset,ginfo.y+yoffset,
                   (const FcChar8*)buffer,strlen(buffer));
     values.line_width = 1;
     values.foreground = foregroundColor;

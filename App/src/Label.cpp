@@ -57,7 +57,8 @@ namespace SmrFramework {
     XClearWindow(display, window);
     if (enabled) {
 #ifdef USEXFT
-      XftTextExtents8(display, xftfont, (const FcChar8*)text.AsCharArray(), text.Length(), &ginfo);
+      XGlyphInfo ginfo;
+      XftTextExtents8(display, font->FontObject(), (const FcChar8*)text.AsCharArray(), text.Length(), &ginfo);
       yoffset = height / 2 - ginfo.height / 2;
       if (align == CENTER)
         xoffset = width / 2 - ginfo.width / 2;
@@ -65,7 +66,7 @@ namespace SmrFramework {
         xoffset = 5;
       if (align == RIGHT)
         xoffset = (width - ginfo.width) - 5;
-      XftDrawString8(xftdrawable, &xftcolor, xftfont, ginfo.x+xoffset+textOffsetX,ginfo.y+yoffset+textOffsetY,
+      XftDrawString8(xftdrawable, &xftcolor, font->FontObject(), ginfo.x+xoffset+textOffsetX,ginfo.y+yoffset+textOffsetY,
                     (const FcChar8*)text.AsCharArray(),text.Length());
       
   #else

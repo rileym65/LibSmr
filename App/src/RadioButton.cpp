@@ -52,12 +52,13 @@ namespace SmrFramework {
     XSetWindowBackground(display, window, backgroundColor);
     XClearWindow(display, window);
 #ifdef USEXFT
+    XGlyphInfo ginfo;
     values.line_width = 1;
     values.foreground = foregroundColor;
     values.background = backgroundColor;
     mask = GCLineWidth | GCForeground | GCBackground;
     gc = XCreateGC(display, window, mask, &values);
-    fontHeight = xftfont->ascent + xftfont->descent;
+    fontHeight = font->Ascent() + font->Descent();
     XDrawArc(display, window, gc, 0, (height-fontHeight) / 2,
                    fontHeight, fontHeight, 0, 360 * 64);
     if (checked) {
@@ -65,10 +66,10 @@ namespace SmrFramework {
                      fontHeight - 2, fontHeight - 2, 0, 360 * 64);
       }
     if (text.Length() != 0) {
-      XftTextExtents8(display, xftfont, (const FcChar8*)text.AsCharArray(), text.Length(), &ginfo);
-      yoffset = (height - fontHeight) / 2 + xftfont->descent;
+      XftTextExtents8(display, font->FontObject(), (const FcChar8*)text.AsCharArray(), text.Length(), &ginfo);
+      yoffset = (height - fontHeight) / 2 + font->Descent();
       xoffset = fontHeight * 1.5;
-      XftDrawString8(xftdrawable, &xftcolor, xftfont, ginfo.x + xoffset,ginfo.y + yoffset,
+      XftDrawString8(xftdrawable, &xftcolor, font->FontObject(), ginfo.x + xoffset,ginfo.y + yoffset,
                     (const FcChar8*)text.AsCharArray(),text.Length());
       }
     XFreeGC(display, gc);

@@ -40,7 +40,8 @@ namespace SmrFramework {
     XSetWindowBackground(display, window, backgroundColor);
     XClearWindow(display, window);
 #ifdef USEXFT
-    XftTextExtents8(display, xftfont, (const FcChar8*)text.AsCharArray(), text.Length(), &ginfo);
+    XGlyphInfo ginfo;
+    XftTextExtents8(display, font->FontObject(), (const FcChar8*)text.AsCharArray(), text.Length(), &ginfo);
     values.line_width = 1;
     values.foreground = foregroundColor;
     values.background = backgroundColor;
@@ -49,7 +50,7 @@ namespace SmrFramework {
     yoffset = ginfo.height / 2;
     XDrawRectangle(display, window, gc, 0, yoffset, width - 1, height - yoffset - 1);
     XClearArea(display, window, 3,0,ginfo.width+6,ginfo.height,false);
-    XftDrawString8(xftdrawable, &xftcolor, xftfont, ginfo.x + 5,ginfo.y,
+    XftDrawString8(xftdrawable, &xftcolor, font->FontObject(), ginfo.x + 5,ginfo.y,
                   (const FcChar8*)text.AsCharArray(),text.Length());
 #else
     if (this->font.Length() == 0) font = XLoadQueryFont(display, "fixed");

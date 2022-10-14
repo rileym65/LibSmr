@@ -40,10 +40,10 @@ namespace SmrFramework {
     this->foregroundColor = Color::Black();
     this->backgroundColor = Color::White();
 #ifdef USEXFT
-    xftfont = control->_XftFont();
+    xftfont = control->Font()->FontObject();
     xftdrawable = control->_XftDrawable();
     xftcolor = control->_XftColor();
-    ginfo = control->_Ginfo();
+    ginfo = control->Font()->GlyphInfo();
 #endif
     }
 
