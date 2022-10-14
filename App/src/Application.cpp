@@ -28,7 +28,11 @@ Application::Application() {
     else display = XOpenDisplay(":0.0");
   XGetWindowAttributes(display, RootWindow(display, DefaultScreen(display)), &screenAttributes);
   getColorMapping();
+#if USEFXT
   font = new TextFont("FreeSans-10");
+#else
+  font = new TextFont("fixed");
+#endif
   forms = NULL;
   numForms = 0;
   timers = NULL;

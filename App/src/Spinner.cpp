@@ -101,9 +101,6 @@ namespace SmrFramework {
   void Spinner::Redraw() {
     GC            gc;
     XGCValues     values;
-#ifndef USEXFT
-    XFontStruct*  font;
-#endif
     unsigned long mask;
     int           xoffset;
     int           yoffset;
@@ -130,17 +127,14 @@ namespace SmrFramework {
     mask = GCLineWidth | GCForeground | GCBackground;
     gc = XCreateGC(display, window, mask, &values);
 #else
-    if (this->font.Length() == 0) font = XLoadQueryFont(display, "fixed");
-      else font = XLoadQueryFont(display, this->font.AsCharArray());
-    if (font == NULL) font = XLoadQueryFont(display, "fixed");
     values.line_width = 1;
     values.foreground = foregroundColor;
     values.background = backgroundColor;
-    values.font = font->fid;
+    values.font = font->FontObject()->fid;
     mask = GCLineWidth | GCForeground | GCBackground | GCFont;
     gc = XCreateGC(display, window, mask, &values);
-    yoffset = (height - (font->ascent + font->descent)) / 2 + font->descent;
-    xoffset = (width-controlLine-XTextWidth(font, buffer, strlen(buffer))) / 2;
+    yoffset = (height - (font->Ascent() + font->Descent())) / 2 + font->Descent();
+    xoffset = (width-controlLine-XTextWidth(font->FontObject(), buffer, strlen(buffer))) / 2;
     XDrawImageString(display,window,gc, xoffset,height-yoffset,
                      buffer,strlen(buffer));
 #endif
@@ -155,9 +149,6 @@ namespace SmrFramework {
     arrow[2].x = width-2;       arrow[2].y = height/2 + 3;
     XFillPolygon(display, window, gc, arrow, 3, Convex, CoordModeOrigin);
     XFreeGC(display, gc);
-#ifndef USEXFT
-    XFreeFont(display, font);
-#endif
     }
 
   } 

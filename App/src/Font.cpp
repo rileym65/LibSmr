@@ -47,7 +47,7 @@ namespace SmrFramework {
     if (xfont->per_char != NULL) {
       for (i=xfont->min_char_or_byte2; i<=xfont->max_char_or_byte2; i++) {
         if (xfont->per_char[i].width == 0)
-          widths[i] = xfong->max_bounds.width;
+          widths[i] = xfont->max_bounds.width;
         else
           widths[i] = xfont->per_char[i].width;
         }
@@ -70,7 +70,7 @@ XftFont* TextFont::FontObject() {
   return xftfont;
   }
 #else
-XFontStruct* TextFont::FontOject() {
+XFontStruct* TextFont::FontObject() {
   return xfont;
   }
 #endif

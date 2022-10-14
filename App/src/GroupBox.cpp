@@ -31,7 +31,6 @@ namespace SmrFramework {
     XGCValues     values;
     unsigned long mask;
 #ifndef USEXFT
-    XFontStruct*  font;
     int           fontHeight;
     int           xoffset;
 #endif
@@ -53,16 +52,13 @@ namespace SmrFramework {
     XftDrawString8(xftdrawable, &xftcolor, font->FontObject(), ginfo.x + 5,ginfo.y,
                   (const FcChar8*)text.AsCharArray(),text.Length());
 #else
-    if (this->font.Length() == 0) font = XLoadQueryFont(display, "fixed");
-      else font = XLoadQueryFont(display, this->font.AsCharArray());
-    if (font == NULL) font = XLoadQueryFont(display, "fixed");
     values.line_width = 1;
     values.foreground = foregroundColor;
     values.background = backgroundColor;
-    values.font = font->fid;
+    values.font = font->FontObject()->fid;
     mask = GCLineWidth | GCForeground | GCBackground | GCFont;
     gc = XCreateGC(display, window, mask, &values);
-    fontHeight = font->ascent + font->descent;
+    fontHeight = font->Ascent() + font->Descent();
     yoffset = fontHeight / 2;
     XDrawRectangle(display, window, gc, 0, yoffset, width - 1,
       height - yoffset - 1);
@@ -73,9 +69,6 @@ namespace SmrFramework {
       }
 #endif
     XFreeGC(display, gc);
-#ifndef USEXFT
-    XFreeFont(display, font);
-#endif
     }
 
   } 

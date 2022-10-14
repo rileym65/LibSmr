@@ -48,7 +48,6 @@ namespace SmrFramework {
 #else
     GC            gc;
     XGCValues     values;
-    XFontStruct*  font;
     unsigned long mask;
 #endif
     int           xoffset;
@@ -70,25 +69,21 @@ namespace SmrFramework {
                     (const FcChar8*)text.AsCharArray(),text.Length());
       
   #else
-      if (this->font.Length() == 0) font = XLoadQueryFont(display, "fixed");
-        else font = XLoadQueryFont(display, this->font.AsCharArray());
-      if (font == NULL) font = XLoadQueryFont(display, "fixed");
       values.line_width = 1;
       values.foreground = foregroundColor;
       values.background = backgroundColor;
-      values.font = font->fid;
+      values.font = font->FontObject()->fid;
       mask = GCLineWidth | GCForeground | GCBackground | GCFont;
       gc = XCreateGC(display, window, mask, &values);
-      yoffset = (height - (font->ascent + font->descent)) / 2 + font->descent;
+      yoffset = (height - (font->Ascent() + font->Descent())) / 2 + font->Descent();
       if (align == CENTER)
-        xoffset = (width - XTextWidth(font, text.AsCharArray(), text.Length())) / 2;
+        xoffset = (width - XTextWidth(font->FontObject(), text.AsCharArray(), text.Length())) / 2;
       if (align == LEFT)
         xoffset = 5;
       if (align == RIGHT)
-        xoffset = (width - XTextWidth(font, text.AsCharArray(), text.Length())) - 5;
+        xoffset = (width - XTextWidth(font->FontObject(), text.AsCharArray(), text.Length())) - 5;
       XDrawString(display,window,gc, xoffset+textOffsetX,height-yoffset+textOffsetY,text.AsCharArray(),text.Length());
       XFreeGC(display, gc);
-      XFreeFont(display, font);
 #endif
       }
     }

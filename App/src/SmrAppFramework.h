@@ -1,7 +1,7 @@
 #ifndef _SMR_APP_FRAMEWORK_H
 #define _SMR_APP_FRAMEWORK_H
 
-#define USEXFT
+// #define USEXFT
 
 #include <sys/types.h>
 #include <sys/socket.h>

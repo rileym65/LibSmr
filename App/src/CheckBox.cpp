@@ -66,9 +66,6 @@ namespace SmrFramework {
   void CheckBox::Redraw() {
     GC            gc;
     XGCValues     values;
-#ifndef USEXFT
-    XFontStruct*  font;
-#endif
     unsigned long mask;
     int           xoffset;
     int           yoffset;
@@ -99,16 +96,13 @@ namespace SmrFramework {
       }
     XFreeGC(display, gc);
 #else
-    if (this->font.Length() == 0) font = XLoadQueryFont(display, "fixed");
-      else font = XLoadQueryFont(display, this->font.AsCharArray());
-    if (font == NULL) font = XLoadQueryFont(display, "fixed");
     values.line_width = 1;
     values.foreground = foregroundColor;
     values.background = backgroundColor;
-    values.font = font->fid;
+    values.font = font->FontObject()->fid;
     mask = GCLineWidth | GCForeground | GCBackground | GCFont;
     gc = XCreateGC(display, window, mask, &values);
-    fontHeight = font->ascent + font->descent;
+    fontHeight = font->Ascent() + font->Descent();
     XDrawRectangle(display, window, gc, 0, (height-fontHeight) / 2,
                    fontHeight, fontHeight);
     if (checked) {
@@ -116,13 +110,12 @@ namespace SmrFramework {
                      fontHeight - 3, fontHeight - 3);
       }
     if (text.Length() != 0) {
-      yoffset = (height - fontHeight) / 2 + font->descent;
+      yoffset = (height - fontHeight) / 2 + font->Descent();
       xoffset = fontHeight * 1.5;
       XDrawImageString(display,window,gc,xoffset,height-yoffset,
                        text.AsCharArray(),text.Length());
       }
     XFreeGC(display, gc);
-    XFreeFont(display, font);
 #endif
     XFlush(display);
     }

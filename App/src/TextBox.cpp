@@ -76,8 +76,6 @@ String TextBox::Text(String text) {
     XGCValues     values;
 #ifdef USEXFT
     XftFont      *fontObj;
-#else
-    XFontStruct*  font;
 #endif
     int           xoffset;
     int           yoffset;
@@ -120,22 +118,21 @@ String TextBox::Text(String text) {
         }
 
   #else
-      if (this->font.Length() == 0) font = XLoadQueryFont(display, "fixed");
-        else font = XLoadQueryFont(display, this->font.AsCharArray());
-      if (font == NULL) font = XLoadQueryFont(display, "fixed");
+      ascent = font->Ascent();
+      descent = font->Descent();
       values.line_width = 1;
       values.foreground = foregroundColor;
       values.background = backgroundColor;
-      values.font = font->fid;
+      values.font = font->FontObject()->fid;
       mask = GCLineWidth | GCForeground | GCBackground | GCFont;
       gc = XCreateGC(display, window, mask, &values);
-      yoffset = (height - (font->ascent + font->descent)) / 2 + font->descent;
+      yoffset = (height - (font->Ascent() + font->Descent())) / 2 + font->Descent();
       if (align == CENTER)
-        xoffset = (width - XTextWidth(font, text.AsCharArray(), text.Length())) / 2;
+        xoffset = (width - XTextWidth(font->FontObject(), text.AsCharArray(), text.Length())) / 2;
       if (align == LEFT)
         xoffset = 5;
       if (align == RIGHT)
-        xoffset = (width - XTextWidth(font, text.AsCharArray(), text.Length())) - 5;
+        xoffset = (width - XTextWidth(font->FontObject(), text.AsCharArray(), text.Length())) - 5;
       text_x = xoffset + textOffsetX;
       XDrawString(display,window,gc, text_x,height-yoffset+textOffsetY,text.AsCharArray(),text.Length());
       if (this == application->Focus() || (application->Focus() == NULL && hasFocus)) {
@@ -151,7 +148,6 @@ String TextBox::Text(String text) {
                                        text_x+cursor_x+3,height-yoffset+textOffsetY+descent+2);
         }
       XFreeGC(display, gc);
-      XFreeFont(display, font);
 #endif
       }
     }
