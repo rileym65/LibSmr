@@ -61,6 +61,7 @@ namespace SmrFramework {
     obj = items->At(i);
     if (obj != NULL) delete(obj);
     items->RemoveAt(i);
+    selectedIndex = (items->Count() > 0) ? 0 : -1;
     }
 
   void DropDownList::Clear() {
@@ -103,6 +104,12 @@ namespace SmrFramework {
 
   int DropDownList::SelectedIndex(Int32 i) {
     if (i < -1) throw RangeException(this, "Value out of range");
+    if (i == -1) {
+      if (items->Count() != 0) throw RangeException(this, "Value out of range");
+      selectedIndex = i;
+      Redraw();
+      return i;
+      }
     if ((UInt32)i >= items->Count()) throw RangeException(this, "Value out of range");
     selectedIndex = i;
     Redraw();
@@ -125,6 +132,7 @@ namespace SmrFramework {
     UInt32    count;
     UInt32    h;
     UInt32    cellHeight;
+    if (items->Count() == 0) return;
     opened = !opened;
     gc = GetGraphics();
     count = items->Count();
