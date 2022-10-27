@@ -88,38 +88,44 @@ namespace SmrFramework {
 
   void DateTime::_convertFromString(const char* dt) {
     int hr,mn,sc,mo,dy,yr;
+    char c1,c2;
     struct tm time;
     timeMode = 'L';
     yr = 0; mo = 0; dy = 0; hr = 0; mn = 0; sc = 0;
     while (*dt > 0 && *dt <= ' ') dt++;
-    if (strlen(dt) >= 19 &&
-        (dt[4] == '-' || dt[4] == '/') &&
-        (dt[7] == '-' || dt[7] == '/') &&
-        (dt[10] == 'T' || dt[10] == 't' || dt[10] == ' ') &&
-        dt[13] == ':' && dt[16] == ':') {
-      yr = ((dt[0]-'0') * 1000) + ((dt[1]-'0') * 100) + ((dt[2]-'0')*10) + (dt[3]-'0');
-      mo = ((dt[5]-'0') * 10) + (dt[6]-'0');
-      dy = ((dt[8]-'0') * 10) + (dt[9]-'0');
-      hr = ((dt[11]-'0') * 10) + (dt[12]-'0');
-      mn = ((dt[14]-'0') * 10) + (dt[15]-'0');
-      sc = ((dt[17]-'0') * 10) + (dt[18]-'0');
-      if (strlen(dt) >= 20 && (dt[19] == 'z' || dt[19] == 'Z')) timeMode = 'U';
+    c1 = dt[1]; c2 = dt[2];
+    while (*dt >= '0' && *dt <= '9') yr = (yr * 10) + (*dt++ - '0');
+    if (*dt != '/' && *dt != '-')
+      throw InvalidOpException(this, "Unknown Date/Time format");
+    dt++;
+    while (*dt >= '0' && *dt <= '9') mo = (mo * 10) + (*dt++ - '0');
+    if (*dt != '/' && *dt != '-')
+      throw InvalidOpException(this, "Unknown Date/Time format");
+    dt++;
+    while (*dt >= '0' && *dt <= '9') dy = (dy * 10) + (*dt++ - '0');
+    if (c1 == '-' || c1 == '/' || c2 == '-' || c2 == '/') {
+      Utils::Swap(yr, dy);
+      Utils::Swap(mo, dy);
       }
-    else if (strlen(dt) >= 19 &&
-        (dt[2] == '-' || dt[2] == '/') &&
-        (dt[5] == '-' || dt[5] == '/') &&
-        (dt[10] == 'T' || dt[10] == 't' || dt[10] == ' ') &&
-        dt[13] == ':' && dt[16] == ':') {
-      yr = ((dt[6]-'0') * 1000) + ((dt[7]-'0') * 100) + ((dt[8]-'0')*10) + (dt[9]-'0');
-      mo = ((dt[0]-'0') * 10) + (dt[1]-'0');
-      dy = ((dt[3]-'0') * 10) + (dt[4]-'0');
-      hr = ((dt[11]-'0') * 10) + (dt[12]-'0');
-      mn = ((dt[14]-'0') * 10) + (dt[15]-'0');
-      sc = ((dt[17]-'0') * 10) + (dt[18]-'0');
-      if (strlen(dt) >= 20 && (dt[19] == 'z' || dt[19] == 'Z')) timeMode = 'U';
+    if (*dt != ' ' && *dt != 't' && *dt != 'T' && *dt != 0)
+      throw InvalidOpException(this, "Unknown Date/Time format");
+    if (*dt != 0) {
+      dt++;
+      while (*dt >= '0' && *dt <= '9') hr = (hr * 10) + (*dt++ - '0');
+      if (*dt != ':')
+        throw InvalidOpException(this, "Unknown Date/Time format");
+      dt++;
+      while (*dt >= '0' && *dt <= '9') mn = (mn * 10) + (*dt++ - '0');
+      if (*dt != ':' && *dt != 0)
+        throw InvalidOpException(this, "Unknown Date/Time format");
+      if (*dt != 0) {
+        dt++;
+        while (*dt >= '0' && *dt <= '9') sc = (sc * 10) + (*dt++ - '0');
+        }
+      if (*dt != 0 && *dt != 'z' && *dt != 'Z')
+        throw InvalidOpException(this, "Unknown Date/Time format");
+      if (*dt == 'z' || *dt == 'Z') timeMode = 'U';
       }
-    else throw InvalidOpException(this, "Unknown Date/Time format");
-
     if (mo < 1 || mo > 12) throw RangeException(this, "Month not in range 1-12");
     if (dy < 1 || dy > DaysInMonth(mo,yr))
       throw RangeException(this, "Day is not a valid value");
@@ -134,7 +140,6 @@ namespace SmrFramework {
     time.tm_year = yr - 1900;
     time.tm_isdst = -1;
     epochSeconds = mktime(&time);
-    timeMode = 'L';
     setupTime();
     }
 
