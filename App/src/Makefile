@@ -54,7 +54,7 @@ OBJS = \
 	VScrollBar.o
 
 ifeq ($(PLATFORM),wsl)
-DEFS += -DNO_FTX
+DEFS += -DNO_XFT
 endif
 
 ifeq ($(PLATFORM),linux)
