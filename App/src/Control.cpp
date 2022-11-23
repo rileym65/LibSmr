@@ -54,9 +54,12 @@ namespace SmrFramework {
                                : DefaultRootWindow(display);
     attr.background_pixel = WhitePixel(display, DefaultScreen(display));
     attr.border_pixel = BlackPixel(display, DefaultScreen(display));
+#ifdef USE_BACKING_STORE
     attr.backing_store = WhenMapped;
     mask = CWBackPixel | CWBorderPixel | CWBackingStore;
-//    mask = CWBackPixel | CWBorderPixel;
+#else
+    mask = CWBackPixel | CWBorderPixel;
+#endif
     this->window = XCreateWindow(display, pwindow, x, y, w, h, 1,
                    CopyFromParent, CopyFromParent, CopyFromParent,
                    mask, &attr);

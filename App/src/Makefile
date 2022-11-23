@@ -1,5 +1,7 @@
 PLATFORM = linux
 #PLATFORM = cygwin
+#PLATFORM = wsl
+#PLATFORM = pi
 
 ifeq ($(PLATFORM),cygwin)
 PROJECT = SmrAppFramework
@@ -50,6 +52,14 @@ OBJS = \
 	Toggle.o \
 	ValueEventArgs.o \
 	VScrollBar.o
+
+ifeq ($(PLATFORM),wsl)
+DEFS += -DNO_FTX
+endif
+
+ifeq ($(PLATFORM),linux)
+DEFS += -DUSE_BACKING_STORE
+endif
 
 ifeq ($(PLATFORM),cygwin)
 LIBCMD = $(CC) -shared -o cyg$(PROJECT).dll \
