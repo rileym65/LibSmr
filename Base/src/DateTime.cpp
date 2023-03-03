@@ -19,6 +19,7 @@ namespace SmrFramework {
 
   DateTime::DateTime() {
     struct timeval tv;
+    tzOffset = timezone / 3600;
     this->objectType = (char*)"DateTime";
     epochSeconds = time(NULL);
     gettimeofday(&tv, NULL);
@@ -526,7 +527,7 @@ namespace SmrFramework {
   double DateTime::ToDouble() {
     double seconds;
     seconds = (this->minute * 60) + (this->hour * 3600) + this->second;
-    seconds += ((Double)microsecond / 1000000.0);
+//    seconds += ((Double)microsecond / 1000000.0);
     seconds /= 86400.0;
     return ToJulianDay() + seconds;
     }

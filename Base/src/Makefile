@@ -39,7 +39,9 @@ OBJS = \
 	Hash.o \
 	HexGrid.o \
 	HrTimer.o \
+	HttpListener.o \
 	HttpRequest.o \
+	HttpServer.o \
 	Huffman.o \
 	Image.o \
 	ImageBMP.o \
@@ -157,7 +159,9 @@ GridObject.o:          $(HEADERS) GridObject.cpp
 Hash.o:                $(HEADERS) Hash.cpp
 HexGrid.o:             $(HEADERS) HexGrid.cpp
 HrTimer.o:             $(HEADERS) HrTimer.cpp
+HttpListener.o:        $(HEADERS) HttpListener.cpp
 HttpRequest.o:         $(HEADERS) HttpRequest.cpp
+HttpServer.o:          $(HEADERS) HttpServer.cpp
 Huffman.o:             $(HEADERS) Huffman.cpp
 Image.o:               $(HEADERS) Image.cpp
 ImageBMP.o:            $(HEADERS) ImageBMP.cpp

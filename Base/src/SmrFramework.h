@@ -643,6 +643,7 @@ namespace SmrFramework {
       int minute;
       int second;
       int microsecond;
+      int    tzOffset;
       time_t epochSeconds;
       void setupTime();
       void _convertFromString(const char* dt);
@@ -2500,7 +2501,73 @@ class AssociativeArray : public Object {
     void    AtPut(String *s, Object* o);
   };
 
+class HttpListener;
 
+class HttpServer : public Object {
+  typedef struct {
+    char **keys;
+    char **values;
+    UInt32 count;
+    } DICT;
+  protected:
+    char  **rHeaderKeys;
+    char  **rHeaderValues;
+    UInt32  numRHeaders;
+    char  **headerKeys;
+    char  **headerValues;
+    UInt32  numHeaders;
+    char  **getKeys;
+    char  **getValues;
+    UInt32  numGet;
+    char  **postKeys;
+    char  **postValues;
+    UInt32  numPost;
+    char   *body;
+    char    method[16];
+    char   *resource;
+    UInt16  port;
+    char   *protocol;
+    UInt32  responseCode;
+    char    responseDescription[32];
+    Socket *server;
+    Boolean terminate;
+    HttpListener* listener;
+    void    _clearData();
+    DICT    _decodeParameters(Byte* message);
+    Int32   _parse(Byte* message, UInt32 length);
+  public:
+    HttpServer();
+    ~HttpServer();
+    void    AddResponseHeader(const char* key, const char* value);
+    char   *Body();
+    char   *Get(const char* key);
+    char   *Get(UInt32 pos);
+    char   *GetKey(UInt32 pos);
+    UInt32  GetCount();
+    char   *Header(const char* key);
+    char   *Header(UInt32 pos);
+    char   *HeaderKey(UInt32 pos);
+    UInt32  HeaderCount();
+    void    Listener(HttpListener* l);
+    char   *Method();
+    UInt16  Port();
+    UInt16  Port(UInt16 i);
+    char   *Post(const char* key);
+    char   *Post(UInt32 pos);
+    char   *PostKey(UInt32 pos);
+    UInt32  PostCount();
+    char   *Protocol();
+    char   *Resource();
+    void    SetResponseCode(UInt32 code, const char* description);
+    void    Start();
+  };
+
+class HttpListener : public Object {
+  public:
+    HttpListener();
+    virtual ~HttpListener();
+    virtual Byte* Request(HttpServer* server, UInt32 *resultLength);
+  };
 
 #include <SmrArray.h>
 #include <SmrList.h>
