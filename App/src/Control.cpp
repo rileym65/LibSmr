@@ -94,8 +94,8 @@ namespace SmrFramework {
     if (keyDownHandler != NULL) delete(keyDownHandler);
     if (keyUpHandler != NULL) delete(keyUpHandler);
     if (paintHandler != NULL) delete(paintHandler);
-    if (backgroundImage != NULL) delete(backgroundImage);
-    if (disabledImage != NULL) delete(disabledImage);
+//    if (backgroundImage != NULL) delete(backgroundImage);
+//    if (disabledImage != NULL) delete(disabledImage);
     if (backgroundPixmap != 0) XFreePixmap(display, backgroundPixmap);
     if (disabledPixmap != 0) XFreePixmap(display, disabledPixmap);
     if (cursor != 0xffffffff) XFreeCursor(display, cursor);
