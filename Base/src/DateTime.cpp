@@ -547,5 +547,20 @@ namespace SmrFramework {
     return year;
     }
 
+  int DateTime::DayOfWeek() {
+    int dw;
+    dw = ToJulianDay();
+    dw = (dw % 7) + 1;
+    if (dw > 6) dw -= 7;
+    return dw;
+    }
+
+  int DateTime::DayOfYear() {
+    int d1,d2;
+    d1 = ToJulianDay();
+    d2 = JulianDay(1, 1, year);
+    return d1-d2;
+    }
+
   }
 

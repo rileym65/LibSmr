@@ -683,6 +683,8 @@ namespace SmrFramework {
       virtual DateTime  AddYears(int amount);
       virtual int       CompareTo(DateTime* b);
       virtual int       Day();
+      virtual int       DayOfWeek();
+      virtual int       DayOfYear();
       virtual int       Equals(DateTime* b);
       virtual int       Hour();
       virtual int       MicroSecond();
