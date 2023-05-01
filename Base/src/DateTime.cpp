@@ -84,6 +84,21 @@ namespace SmrFramework {
     microsecond = 0;
     }
 
+  DateTime::DateTime(int mo,int dy,int yr,int hr,int mn,int sc,int ms) {
+    struct tm time;
+    time.tm_hour = hr;
+    time.tm_min = mn;
+    time.tm_sec = sc;
+    time.tm_mon = mo - 1;
+    time.tm_mday = dy;
+    time.tm_year = yr - 1900;
+    time.tm_isdst = -1;
+    epochSeconds = mktime(&time);
+    timeMode = 'L';
+    setupTime();
+    microsecond = ms;
+    }
+
   DateTime::~DateTime() {
     }
 
@@ -330,7 +345,7 @@ namespace SmrFramework {
     minutes = this->minute + value->Minutes();
     seconds = this->second + value->Seconds();
     Normalize(&month,&day,&year,&hours,&minutes,&seconds);
-    return DateTime(month,day,year,hours,minutes,seconds);
+    return DateTime(month,day,year,hours,minutes,seconds, this->microsecond);
     }
 
   DateTime DateTime::AddDays(int amount) {
@@ -342,7 +357,7 @@ namespace SmrFramework {
     minute = this->minute;
     second = this->second;
     Normalize(&month,&day,&year,&hour,&minute,&second);
-    return DateTime(month, day, year, hour, minute, second);
+    return DateTime(month, day, year, hour, minute, second, this->microsecond);
     }
 
   DateTime DateTime::AddHours(int amount) {
@@ -354,7 +369,7 @@ namespace SmrFramework {
     minute = this->minute;
     second = this->second;
     Normalize(&month,&day,&year,&hour,&minute,&second);
-    return DateTime(month, day, year, hour, minute, second);
+    return DateTime(month, day, year, hour, minute, second, this->microsecond);
     }
 
   DateTime DateTime::AddMinutes(int amount) {
@@ -366,7 +381,7 @@ namespace SmrFramework {
     minute = this->minute + amount;
     second = this->second;
     Normalize(&month,&day,&year,&hour,&minute,&second);
-    return DateTime(month, day, year, hour, minute, second);
+    return DateTime(month, day, year, hour, minute, second, this->microsecond);
     }
 
   DateTime DateTime::AddMonths(int amount) {
@@ -378,7 +393,7 @@ namespace SmrFramework {
     minute = this->minute;
     second = this->second;
     Normalize(&month,&day,&year,&hour,&minute,&second);
-    return DateTime(month, day, year, hour, minute, second);
+    return DateTime(month, day, year, hour, minute, second, this->microsecond);
     }
 
   DateTime DateTime::AddSeconds(int amount) {
@@ -390,7 +405,7 @@ namespace SmrFramework {
     minute = this->minute;
     second = this->second + amount;
     Normalize(&month,&day,&year,&hour,&minute,&second);
-    return DateTime(month, day, year, hour, minute, second);
+    return DateTime(month, day, year, hour, minute, second, this->microsecond);
     }
 
   DateTime DateTime::AddYears(int amount) {
@@ -402,7 +417,7 @@ namespace SmrFramework {
     minute = this->minute;
     second = this->second;
     Normalize(&month,&day,&year,&hour,&minute,&second);
-    return DateTime(month, day, year, hour, minute, second);
+    return DateTime(month, day, year, hour, minute, second, this->microsecond);
     }
 
   int DateTime::CompareTo(DateTime* b) {

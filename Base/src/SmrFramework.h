@@ -657,6 +657,7 @@ namespace SmrFramework {
       DateTime(String dt,char mode);
       DateTime(String* dt,char mode);
       DateTime(int mo,int dy,int yr,int hr=0,int mn=0,int sc=0);
+      DateTime(int mo,int dy,int yr,int hr,int mn,int sc,int ms);
       virtual ~DateTime();
       static int        Compare(DateTime* a, DateTime* b);
       static int        DaysInMonth(int month, int year);
