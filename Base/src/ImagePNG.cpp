@@ -492,6 +492,12 @@ namespace SmrFramework {
         case 0x53524742:                                         /* sRGB */
 //             renderingIntent = buffer[0];
              break;
+        case 0x4348524d:                                         /* CHRM */
+             break;
+        case 0x54455854:                                         /* TEXT */
+             break;
+        case 0x49434350:                                         /* ICCP */
+             break;
         default:
              printf("Unknown chunk %8x ignored\n",chunkType);
              break;
