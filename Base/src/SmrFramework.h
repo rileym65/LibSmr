@@ -2572,6 +2572,43 @@ class HttpListener : public Object {
     virtual Byte* Request(HttpServer* server, UInt32 *resultLength);
   };
 
+class IniFile : public Object {
+  protected:
+    String  *iniName;
+    Boolean  modified;
+    char   **sections;
+    UInt32   numSections;
+    UInt32   lastSection;
+    UInt32  *entrySection;
+    char   **entryKey;
+    char   **entryValue;
+    UInt32   numEntries;
+    Int32    _findEntry(UInt32 section, const char* key);
+    Int32    _findSection(const char* section);
+    void     _readIniFile(const char* filename);
+    void     _readEntry(const char* line);
+    void     _readSection(const char* line);
+  public:
+    IniFile(const char* filename);
+    IniFile(String filename);
+    IniFile(String *filename);
+    String *Read(const char* section, const char* key);
+    String *Read(const char* section, const char* key, const char* def);
+    Int32   ReadInteger(const char* section, const char* key);
+    Int32   ReadInteger(const char* section, const char* key, Int32 def);
+    Double  ReadDouble(const char* section, const char* key);
+    Double  ReadDouble(const char* section, const char* key, Double def);
+    Boolean ReadBoolean(const char* section, const char* key);
+    Boolean ReadBoolean(const char* section, const char* key, Boolean def);
+    void    Write(const char* section, const char* key, const char* value);
+    void    Write(const char* section, const char* key, UInt32 value);
+    void    Write(const char* section, const char* key, Int32 value);
+    void    Write(const char* section, const char* key, Double value);
+    void    Write(const char* section, const char* key, Boolean value);
+    void    Save();
+    ~IniFile();
+  };
+
 #include <SmrArray.h>
 #include <SmrList.h>
 #include <SmrSet.h>

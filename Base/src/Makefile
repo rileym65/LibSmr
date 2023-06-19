@@ -50,6 +50,7 @@ OBJS = \
 	ImagePNG.o \
 	ImageXBM.o \
 	ImageXPM.o \
+	IniFile.o \
 	InvalidOpException.o \
 	Json.o \
 	Length.o \
@@ -170,6 +171,7 @@ ImageJPG.o:            $(HEADERS) ImageJPG.cpp
 ImagePNG.o:            $(HEADERS) ImagePNG.cpp
 ImageXBM.o:            $(HEADERS) ImageXBM.cpp
 ImageXPM.o:            $(HEADERS) ImageXPM.cpp
+IniFile.o:             $(HEADERS) IniFile.cpp
 InvalidOpException.o:  $(HEADERS) InvalidOpException.cpp
 Json.o:                $(HEADERS) Json.cpp
 Length.o:              $(HEADERS) Length.cpp
