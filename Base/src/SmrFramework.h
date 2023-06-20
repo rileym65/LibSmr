@@ -2629,6 +2629,22 @@ class RpnCalculator : Object {
     void   SetVar(const char* name, Double value);
   };
 
+class Calculator : Object {
+  protected:
+    char   **variableNames;
+    Double  *variableValues;
+    UInt32   numVariables;
+    char     trigMode;
+    Int32   _findVariable(const char* name);
+    Boolean _isTerm(char c);
+  public:
+    Calculator();
+    ~Calculator();
+    Double Calculate(const char* expr);
+    Double GetVar(const char* name);
+    void   SetVar(const char* name, Double value);
+  };
+
 #include <SmrArray.h>
 #include <SmrList.h>
 #include <SmrSet.h>

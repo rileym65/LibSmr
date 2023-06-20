@@ -18,6 +18,7 @@ OBJS = \
 	AssociativeArray.o \
 	Base64.o \
 	BitStream.o \
+	Calculator.o \
 	Callback.o \
 	CastException.o \
 	ComplexNumber.o \
@@ -140,6 +141,7 @@ endif
 AssociativeArray.o:    $(HEADERS) AssociativeArray.cpp
 Base64.o:              $(HEADERS) Base64.cpp
 BitStream.o:           $(HEADERS) BitStream.cpp
+Calculator.o:          $(HEADERS) Calculator.cpp
 Callback.o:            $(HEADERS) Callback.cpp
 CastException.o:       $(HEADERS) CastException.cpp
 ComplexNumber.o:       $(HEADERS) ComplexNumber.cpp

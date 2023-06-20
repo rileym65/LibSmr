@@ -6,7 +6,7 @@
 using namespace SmrFramework;
 
 RpnCalculator::RpnCalculator() {
-  objectType = (char*)"String";
+  objectType = (char*)"RpnCalculator";
   sp = 0;
   trigMode = 'R';
   numVariables = 0;
