@@ -47,7 +47,7 @@ void IniFile::_readIniFile(const char* filename) {
   char  *pline;
   numEntries = 0;
   sections = NULL;
-  lastSection = -1;
+  lastSection = 0;
   modified = false;
   iniName = new String(filename);
   file = fopen(filename,"r");
