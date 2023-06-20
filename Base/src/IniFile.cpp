@@ -71,6 +71,7 @@ void IniFile::_readIniFile(const char* filename) {
     pline = line;
     while (*pline == ' ' || *pline == '\t') pline++;
     if (*pline == '[') _readSection(pline);
+    else if (*pline == ';' || *pline == '#') ;
     else if (strlen(pline) > 0)
       _readEntry(pline);
     }
