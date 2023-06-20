@@ -2609,6 +2609,26 @@ class IniFile : public Object {
     ~IniFile();
   };
 
+class RpnCalculator : Object {
+  protected:
+    char   **variableNames;
+    Double  *variableValues;
+    UInt32   numVariables;
+    Double   stack[1023];
+    UInt32   sp;
+    char     trigMode;
+    Int32   _findVariable(const char* name);
+    Boolean _isTerm(char c);
+    Double  _pop();
+    void    _push(Double d);
+  public:
+    RpnCalculator();
+    ~RpnCalculator();
+    Double Calculate(const char* expr);
+    Double GetVar(const char* name);
+    void   SetVar(const char* name, Double value);
+  };
+
 #include <SmrArray.h>
 #include <SmrList.h>
 #include <SmrSet.h>

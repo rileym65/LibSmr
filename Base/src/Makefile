@@ -74,6 +74,7 @@ OBJS = \
 	RangeException.o \
 	Rectangle.o \
 	RegEx.o \
+	RpnCalculator.o \
 	Socket.o \
 	StopWatch.o \
 	Stream.o \
@@ -195,6 +196,7 @@ Random.o:              $(HEADERS) Random.cpp
 RangeException.o:      $(HEADERS) RangeException.cpp
 Rectangle.o:           $(HEADERS) Rectangle.cpp
 RegEx.o:               $(HEADERS) RegEx.cpp
+RpnCalculator.o:       $(HEADERS) RpnCalculator.cpp
 Socket.o:              $(HEADERS) Socket.cpp
 StopWatch.o:           $(HEADERS) StopWatch.cpp
 Stream.o:              $(HEADERS) Stream.cpp
