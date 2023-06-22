@@ -5,6 +5,7 @@
 #include <sys/socket.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <exception>
@@ -2643,6 +2644,37 @@ class Calculator : Object {
     Double Calculate(const char* expr);
     Double GetVar(const char* name);
     void   SetVar(const char* name, Double value);
+  };
+
+class PreProcessor : Object {
+  protected:
+    UInt32 errors;
+    FILE  *files[32];
+    UInt32 fileLines[32];
+    char   fileNames[32][1024];
+    UInt32 numFiles;
+    char   cond[256];
+    UInt32 numCond;
+    UInt32 totalLines;
+    Boolean redefine;
+    char **defineNames;
+    char **defineValues;
+    UInt32 numDefines;
+    Int32  findDefine(const char* name);
+    char  *trim(char* line);
+    void   replace(char* line, UInt32 start, UInt32 len, const char* value);
+  public:
+    PreProcessor(const char* filename);
+    ~PreProcessor();
+   Boolean EndOfFile();
+   char*   GetDefine(const char* name);
+   void    SetDefine(const char* name, const char* value);
+   String *Read();
+   Boolean Redefine();
+   Boolean Redefine(Boolean b);
+   UInt32  Errors();
+   UInt32  LineCount();
+   UInt32  FileCount();
   };
 
 #include <SmrArray.h>

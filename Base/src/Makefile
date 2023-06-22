@@ -71,6 +71,7 @@ OBJS = \
 	Parser.o \
 	Point.o \
 	Polygon.o \
+	PreProcessor.o \
 	Random.o \
 	RangeException.o \
 	Rectangle.o \
@@ -194,6 +195,7 @@ Palette.o:             $(HEADERS) Palette.cpp
 Parser.o:              $(HEADERS) Parser.cpp
 Point.o:               $(HEADERS) Point.cpp
 Polygon.o:             $(HEADERS) Polygon.cpp
+PreProcessor.o:        $(HEADERS) PreProcessor.cpp
 Random.o:              $(HEADERS) Random.cpp
 RangeException.o:      $(HEADERS) RangeException.cpp
 Rectangle.o:           $(HEADERS) Rectangle.cpp
