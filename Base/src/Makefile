@@ -1,10 +1,17 @@
-PLATFORM = linux
+#PLATFORM = linux
+PLATFORM = linux64
 #PLATFORM = cygwin
+
+ifeq ($(PLATFORM),linux)
+PROJECT = libSmrFramework.so.1
+endif
+
+ifeq ($(PLATFORM),linux64)
+PROJECT = libSmrFramework.so.1
+endif
 
 ifeq ($(PLATFORM),cygwin)
 PROJECT = SmrFramework
-else
-PROJECT = libSmrFramework.so.1
 endif
 
 CC = g++
@@ -92,6 +99,15 @@ OBJS = \
 	Utils.o \
 	Vector.o \
 
+ifeq ($(PLATFORM),linux)
+LIBCMD = $(CC) -shared -Xlinker -h -Xlinker $(PROJECT) $(OBJS) -o $(PROJECT)
+endif
+
+ifeq ($(PLATFORM),linux64)
+LIBCMD = $(CC) -shared -Xlinker -h -Xlinker $(PROJECT) $(OBJS) -o $(PROJECT)
+DEFS += -DBITS64
+endif
+
 ifeq ($(PLATFORM),cygwin)
 LIBCMD = $(CC) -shared -o cyg$(PROJECT).dll \
 	-Wl,--out-implib=lib$(PROJECT).dll.a \
@@ -99,8 +115,6 @@ LIBCMD = $(CC) -shared -o cyg$(PROJECT).dll \
 	-Wl,--enable-auto-import \
 	-Wl,--whole-archive $(OBJS) \
 	-Wl,--no-whole-archive -lX11
-else
-LIBCMD = $(CC) -shared -Xlinker -h -Xlinker $(PROJECT) $(OBJS) -o $(PROJECT)
 endif
 
 $(PROJECT): $(OBJS)

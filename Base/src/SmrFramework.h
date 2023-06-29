@@ -11,12 +11,18 @@
 #include <exception>
 #include <termios.h>
 
-#ifdef __GNUC__
-#ifdef __x86_64__
+// #ifdef __GNUC__
+// #ifdef __x86_64__
+// #define IS64BIT
+// #else
+// #define IS32BIT
+// #endif
+// #endif
+
+#ifdef BITS64
 #define IS64BIT
 #else
 #define IS32BIT
-#endif
 #endif
 
 namespace SmrFramework {
