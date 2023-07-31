@@ -176,7 +176,7 @@ namespace SmrFramework {
   DateTime DateTime::FromJulianDay(double jd) {
     double q;
     int z,w,x,a,b,c,d,e,f,day,month,year;
-    q = jd + 0.5;
+    q = jd + 1;
     z = (int)q;
     w = (z - 1867216.25) / 36524.25;
     x = w / 4;
@@ -209,7 +209,7 @@ namespace SmrFramework {
     c = 2 - a + b;
     e = 365.25 * (y + 4716);
     f = 30.6001 * (m + 1);
-    jd = c + d + e + f - 1524.5;
+    jd = c + d + e + f - 1525;
     return jd;
     }
 
