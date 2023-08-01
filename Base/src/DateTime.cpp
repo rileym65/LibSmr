@@ -175,7 +175,12 @@ namespace SmrFramework {
 
   DateTime DateTime::FromJulianDay(double jd) {
     double q;
+    int seconds;
+    int hours;
+    int minutes;
     int z,w,x,a,b,c,d,e,f,day,month,year;
+    q = (jd - (int)jd) * 86400;
+    seconds = (int)q;
     q = jd + 1;
     z = (int)q;
     w = (z - 1867216.25) / 36524.25;
@@ -190,7 +195,11 @@ namespace SmrFramework {
     month = e - 1;
     if (month > 12) month -= 12;
     year = (month <= 2) ? c - 4715 : c - 4716;
-    return DateTime(month, day, year, 0, 0, 0);
+    hours = seconds / 3600;
+    seconds -= (hours * 3600);
+    minutes = seconds / 60;
+    seconds -= (minutes * 60);
+    return DateTime(month, day, year, hours, minutes, seconds);
     }
 
   int DateTime::IsLeapYear(int year) {
