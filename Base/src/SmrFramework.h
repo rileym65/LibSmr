@@ -1053,7 +1053,7 @@ namespace SmrFramework {
       char padding;
       char outchars[5];
       Byte outbytes[4];
-      char* encodeGroup(Byte* inp);
+      char* encodeGroup(Byte* inp, int l);
       int   decodeGroup(const char* inp);
     public:
       Base64();
@@ -2681,6 +2681,46 @@ class PreProcessor : Object {
    UInt32  Errors();
    UInt32  LineCount();
    UInt32  FileCount();
+  };
+
+class Cipher : public Object {
+  protected:
+  public:
+    Cipher();
+    virtual ~Cipher();
+    virtual void  Init(const char* key);
+    virtual char* Encrypt(char* inP, Int32 len, char* dest, Int32 *length);
+    virtual char* Decrypt(char* inP, int len, char* dest, Int32 *length);
+  };
+
+class CipherAes : public Cipher {
+  protected:
+    int  Aes_Nb = 4;
+    Byte Aes_state[16];
+    Byte Aes_roundKey[240];
+    Byte Aes_key[32];
+    int  Aes_Nr;
+    int  Aes_Nk;
+
+    Byte AesXtime(Byte x);
+    Byte AesMultiply(Byte x, Byte y);
+    Byte AesStateAt(Int32 x, Int32 y);
+    void AesStateAtPut(Int32 x, Int32 y, Byte v);
+    void AesKeyExpansion();
+    void AesAddRoundKey(Int32 round);
+    void AesSubBytes();
+    void AesInvSubBytes();
+    void AesShiftRows();
+    void AesInvShiftRows();
+    void AesMixColumns();
+    void AesInvMixColumns();
+  public:
+    CipherAes();
+    CipherAes(const char* cipherKey);
+    virtual ~CipherAes();
+    virtual void  Init(const char* cipherKey);
+    virtual char* Encrypt(char* inP, Int32 len, char* dest, Int32 *length);
+    virtual char* Decrypt(char* inP, int len, char* dest, Int32 *length);
   };
 
 #include <SmrArray.h>

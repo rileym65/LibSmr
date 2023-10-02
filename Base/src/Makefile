@@ -28,6 +28,8 @@ OBJS = \
 	Calculator.o \
 	Callback.o \
 	CastException.o \
+	Cipher.o \
+	CipherAes.o \
 	ComplexNumber.o \
 	Convert.o \
 	DateTime.o \
@@ -159,6 +161,8 @@ BitStream.o:           $(HEADERS) BitStream.cpp
 Calculator.o:          $(HEADERS) Calculator.cpp
 Callback.o:            $(HEADERS) Callback.cpp
 CastException.o:       $(HEADERS) CastException.cpp
+Cipher.o:              $(HEADERS) Cipher.cpp
+CipherAes.o:           $(HEADERS) CipherAes.cpp
 ComplexNumber.o:       $(HEADERS) ComplexNumber.cpp
 Convert.o:             $(HEADERS) Convert.cpp
 DateTime.o:            $(HEADERS) DateTime.cpp

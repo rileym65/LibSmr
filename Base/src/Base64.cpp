@@ -84,13 +84,10 @@ namespace SmrFramework {
     return Decode(msg->AsCharArray());
     }
 
-  char* Base64::encodeGroup(Byte* inp) {
+  char* Base64::encodeGroup(Byte* inp, int l) {
     int i1, i2, i3;
     int len;
-    if (inp[0] == 0) len = 0;
-    else if (inp[1] == 0) len = 1;
-    else if (inp[2] == 0) len = 2;
-    else len = 3;
+    len = l;
     outchars[2] = padding;
     outchars[3] = padding;
     outchars[4] = 0;
@@ -111,10 +108,16 @@ namespace SmrFramework {
     Byte  temp[4];
     String ret;
     int   pos;
+    int   l;
     if (len < 1) return new String("");
     output = NULL;
     pos = 0;
     while ((len-pos) > 0) {
+      temp[0] = 0;
+      temp[1] = 0;
+      temp[2] = 0;
+      if (len-pos >= 3) l = 3;
+        else l = len-pos;
       strncpy((char*)temp, (const char*)(msg+pos), 3);
       temp[3] = 0;
       if (output == NULL) {
@@ -122,7 +125,7 @@ namespace SmrFramework {
         output[0] = 0;
         }
         else output = (char*)realloc(output,strlen(output)+5);
-      strcat(output, (const char*)encodeGroup(temp));
+      strcat(output, (const char*)encodeGroup(temp, l));
       pos += 3;
       }
     ret = String((const char*)output);
