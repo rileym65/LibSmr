@@ -2702,10 +2702,15 @@ class CipherAes : public Cipher {
     int  Aes_Nr;
     int  Aes_Nk;
 
+    Byte enc[4][4];
+    Byte comb[4][4];
+    Byte state[4][4];
+    Byte mode;
+    Byte initVector[4][4];
+    UInt64 counter;
+
     Byte AesXtime(Byte x);
     Byte AesMultiply(Byte x, Byte y);
-    Byte AesStateAt(Int32 x, Int32 y);
-    void AesStateAtPut(Int32 x, Int32 y, Byte v);
     void AesKeyExpansion();
     void AesAddRoundKey(Int32 round);
     void AesSubBytes();
@@ -2714,13 +2719,25 @@ class CipherAes : public Cipher {
     void AesInvShiftRows();
     void AesMixColumns();
     void AesInvMixColumns();
+    void _encrypt();
+    void _decrypt();
   public:
+    static const Byte AES_MODE_ECB = 0;
+    static const Byte AES_MODE_CBC = 1;
+    static const Byte AES_MODE_CFB = 2;
+    static const Byte AES_MODE_OFB = 3;
+    static const Byte AES_MODE_CTR = 4;
     CipherAes();
     CipherAes(const char* cipherKey);
     virtual ~CipherAes();
     virtual void  Init(const char* cipherKey);
     virtual char* Encrypt(char* inP, Int32 len, char* dest, Int32 *length);
     virtual char* Decrypt(char* inP, int len, char* dest, Int32 *length);
+    virtual void  IV(const Byte* iv);
+    virtual UInt64 Counter();
+    virtual UInt64 Counter(UInt64 i);
+    virtual Byte  Mode();
+    virtual Byte  Mode(Byte b);
   };
 
 #include <SmrArray.h>
