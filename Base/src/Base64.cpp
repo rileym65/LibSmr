@@ -75,7 +75,7 @@ namespace SmrFramework {
       }
     temp[outpos] = 0;
     if (outpos == 0) return new String("");
-    ret = String((const char*)temp);
+    ret = String((const char*)temp, outpos);
     free(temp);
     return ret;
     }
