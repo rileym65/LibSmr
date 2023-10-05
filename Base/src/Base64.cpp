@@ -88,7 +88,6 @@ namespace SmrFramework {
     int i1, i2, i3;
     int len;
     len = l;
-printf("len:%d  ",l);
     outchars[2] = padding;
     outchars[3] = padding;
     outchars[4] = 0;
@@ -101,7 +100,6 @@ printf("len:%d  ",l);
     outchars[2] = alphabet[((i2 & 0xf) << 2) | ((i3 >> 6) & 0x3)];
     if (len == 2) return outchars;
     outchars[3] = alphabet[i3 & 0x3f];
-printf("%s\n",outchars);
     return outchars;
     }
 
