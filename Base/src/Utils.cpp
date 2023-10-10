@@ -151,7 +151,7 @@ namespace SmrFramework {
     }
 
   UInt16 Utils::RotateLeft(UInt16 v, UInt32 count) {
-    Byte t;
+    UInt16 t;
     while (count > 0) {
       t = (v & 0x8000) >> 15;
       v = (v << 1) | t;
@@ -161,7 +161,7 @@ namespace SmrFramework {
     }
 
   UInt32 Utils::RotateLeft(UInt32 v, UInt32 count) {
-    Byte t;
+    UInt32 t;
     while (count > 0) {
       t = (v & 0x80000000) >> 31;
       v = (v << 1) | t;
@@ -171,7 +171,7 @@ namespace SmrFramework {
     }
 
   UInt64 Utils::RotateLeft(UInt64 v, UInt32 count) {
-    Byte t;
+    UInt64 t;
     while (count > 0) {
       t = (v & 0x8000000000000000) >> 63;
       v = (v << 1) | t;
@@ -191,7 +191,7 @@ namespace SmrFramework {
     }
 
   UInt16 Utils::RotateRight(UInt16 v, UInt32 count) {
-    Byte t;
+    UInt16 t;
     while (count > 0) {
       t = (v & 0x1) << 15;
       v = (v >> 1) | t;
@@ -201,7 +201,7 @@ namespace SmrFramework {
     }
 
   UInt32 Utils::RotateRight(UInt32 v, UInt32 count) {
-    Byte t;
+    UInt32 t;
     while (count > 0) {
       t = (v & 0x1) << 31;
       v = (v >> 1) | t;
@@ -211,7 +211,7 @@ namespace SmrFramework {
     }
 
   UInt64 Utils::RotateRight(UInt64 v, UInt32 count) {
-    Byte t;
+    UInt64 t;
     while (count > 0) {
       t = (v & 0x1) << 63;
       v = (v >> 1) | t;

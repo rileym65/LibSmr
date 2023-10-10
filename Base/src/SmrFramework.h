@@ -275,6 +275,7 @@ namespace SmrFramework {
       virtual ~Hash();
       static String Md5(const char* msg, UInt32 size);
       static String Sha1(const char* msg, UInt32 size);
+      static String Sha256(const Byte* msg, UInt32 size);
     };
       
   class Palette : public Object {
@@ -2488,6 +2489,7 @@ class HttpRequest {
     Byte Method();
     Byte Method(Byte i);
     String* Protocol();
+    String* ResponseHeader(char* header);
     int Send(const char* message);
     UInt32 Result();
   };

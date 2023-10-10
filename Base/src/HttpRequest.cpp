@@ -291,3 +291,13 @@ UInt32 HttpRequest::Result() {
   return httpResult;
   }
 
+String* HttpRequest::ResponseHeader(char* header) {
+  UInt32 i;
+  for (i=0; i<responseHeaders->Count(); i++) {
+    if (responseHeaders->At(i)->Equals(header))
+      return responseHeaderValues->At(i);
+    }
+  return NULL;
+  }
+
+
