@@ -2489,7 +2489,7 @@ class HttpRequest {
     Byte Method();
     Byte Method(Byte i);
     String* Protocol();
-    String* ResponseHeader(char* header);
+    String* ResponseHeader(const char* header);
     int Send(const char* message);
     UInt32 Result();
   };
@@ -2691,6 +2691,7 @@ class Cipher : public Object {
     Cipher();
     virtual ~Cipher();
     virtual void  Init(const char* key);
+    virtual void  Init(const char* key, UInt32 size);
     virtual char* Encrypt(char* inP, Int32 len, char* dest, Int32 *length);
     virtual char* Decrypt(char* inP, int len, char* dest, Int32 *length);
   };
@@ -2731,8 +2732,10 @@ class CipherAes : public Cipher {
     static const Byte AES_MODE_CTR = 4;
     CipherAes();
     CipherAes(const char* cipherKey);
+    CipherAes(const char* cipherKey,UInt32 size);
     virtual ~CipherAes();
     virtual void  Init(const char* cipherKey);
+    virtual void  Init(const char* cipherKey, UInt32 size);
     virtual char* Encrypt(char* inP, Int32 len, char* dest, Int32 *length);
     virtual char* Decrypt(char* inP, int len, char* dest, Int32 *length);
     virtual void  IV(const Byte* iv);

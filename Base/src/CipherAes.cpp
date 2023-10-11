@@ -85,6 +85,21 @@ CipherAes::CipherAes(const char* cipherKey) : Cipher() {
   counter = 0;
   }
 
+CipherAes::CipherAes(const char* cipherKey, UInt32 size) : Cipher() {
+  int i, x, y;
+  objectType = (char*)"CipherAes";
+  mode = AES_MODE_ECB;
+  for (y=0; y<4; y++)
+    for (x=0; x<4; x++) {
+      initVector[y][x] = 0;
+      state[y][x] = 0;
+      }
+  for (i=0; i<240; i++) Aes_roundKey[i] = 0;
+  for (i=0; i<32; i++) Aes_key[i] = 0;
+  Init(cipherKey, size);
+  counter = 0;
+  }
+
 CipherAes::~CipherAes() {
   }
 
@@ -155,10 +170,27 @@ void CipherAes::Init(const char* cipherKey) {
       state[y][x] = 0;
   Aes_Nk = strlen(cipherKey) * 8 / 32;
   Aes_Nr = Aes_Nk + 6;
-printf("Number of rounds: %d\n",Aes_Nr);
   for (x = 0; x < 32; x++) Aes_key[x] = 0;
   x = 0;
   klen = strlen(cipherKey);
+  if (klen > 32) klen = 32;
+  for (i = 0; i < klen; i++)
+    Aes_key[x++] = (Byte)cipherKey[i];
+  AesKeyExpansion();
+  }
+
+void CipherAes::Init(const char* cipherKey, UInt32 size) {
+  Int32 i;
+  Int32 x, y;
+  Int32 klen;
+  for (x = 0; x < 4; x++)
+    for (y = 0; y < 4; y++)
+      state[y][x] = 0;
+  Aes_Nk = strlen(cipherKey) * 8 / 32;
+  Aes_Nr = Aes_Nk + 6;
+  for (x = 0; x < 32; x++) Aes_key[x] = 0;
+  x = 0;
+  klen = size;
   if (klen > 32) klen = 32;
   for (i = 0; i < klen; i++)
     Aes_key[x++] = (Byte)cipherKey[i];
