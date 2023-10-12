@@ -279,7 +279,7 @@ Boolean IniFile::ReadBoolean(const char* section, const char* key) {
 
 Boolean IniFile::ReadBoolean(const char* section, const char* key, Boolean def) {
   try {
-    return ReadDouble(section, key);
+    return ReadBoolean(section, key);
     }
   catch (...) {
     return def;
