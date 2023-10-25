@@ -186,7 +186,7 @@ void CipherAes::Init(const char* cipherKey, UInt32 size) {
   for (x = 0; x < 4; x++)
     for (y = 0; y < 4; y++)
       state[y][x] = 0;
-  Aes_Nk = strlen(cipherKey) * 8 / 32;
+  Aes_Nk = size * 8 / 32;
   Aes_Nr = Aes_Nk + 6;
   for (x = 0; x < 32; x++) Aes_key[x] = 0;
   x = 0;
