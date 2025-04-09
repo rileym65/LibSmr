@@ -2483,15 +2483,14 @@ namespace SmrFramework {
 
 
   Byte Convert::ToBitSize(UInt32 value) {
-    UInt32 bitSize;
-    Byte   size;
-    size = 1;
-    bitSize = 2;
-    while (value >= bitSize) {
-      size++;
-      bitSize <<= 1;
+    Byte bits;
+    bits = 0;
+    value--;
+    while (value != 0) {
+      bits++;
+      value >>= 1;
       }
-    return size;
+    return bits;
     }
 
   char Convert::ToHexChar(Byte v) {
