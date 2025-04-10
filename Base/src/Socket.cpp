@@ -43,7 +43,9 @@ namespace SmrFramework {
     }
   
   Socket::~Socket() {
-    if (sock >= 0) close(sock);
+    if (sock >= 0) {
+      close(sock);
+      }
     }
   
   Socket* Socket::Accept() {
