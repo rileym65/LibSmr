@@ -664,6 +664,7 @@ namespace SmrFramework {
       DateTime(const char* dt,char mode);
       DateTime(String dt,char mode);
       DateTime(String* dt,char mode);
+      DateTime(double jd);
       DateTime(int mo,int dy,int yr,int hr=0,int mn=0,int sc=0);
       DateTime(int mo,int dy,int yr,int hr,int mn,int sc,int ms);
       virtual ~DateTime();

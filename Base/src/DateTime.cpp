@@ -84,6 +84,46 @@ namespace SmrFramework {
     microsecond = 0;
     }
 
+  DateTime::DateTime(double jd) {
+    struct tm time;
+    double q;
+    int seconds;
+    int hours;
+    int minutes;
+    int z,w,x,a,b,c,d,e,f,day,month,year;
+    q = (jd - (int)jd) * 86400;
+    seconds = (int)q;
+    q = jd + 1;
+    z = (int)q;
+    w = (z - 1867216.25) / 36524.25;
+    x = w / 4;
+    a = z + 1 + w - x;
+    b = a + 1524;
+    c = (b - 122.1) / 365.25;
+    d = 365.25 * c;
+    e = (b - d) / 30.6001;
+    f = 30.6001 * e;
+    day = b - d - f + (q - z);
+    month = e - 1;
+    if (month > 12) month -= 12;
+    year = (month <= 2) ? c - 4715 : c - 4716;
+    hours = seconds / 3600;
+    seconds -= (hours * 3600);
+    minutes = seconds / 60;
+    seconds -= (minutes * 60);
+    time.tm_hour = hours;
+    time.tm_min = minutes;
+    time.tm_sec = seconds;
+    time.tm_mon = month - 1;
+    time.tm_mday = day;
+    time.tm_year = year - 1900;
+    time.tm_isdst = -1;
+    epochSeconds = mktime(&time);
+    timeMode = 'L';
+    setupTime();
+    microsecond = 0;
+    }
+
   DateTime::DateTime(int mo,int dy,int yr,int hr,int mn,int sc,int ms) {
     struct tm time;
     time.tm_hour = hr;
