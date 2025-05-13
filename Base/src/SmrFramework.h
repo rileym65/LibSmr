@@ -707,6 +707,9 @@ namespace SmrFramework {
       virtual double    ToDouble();
       virtual double    ToJulianDay();
       virtual String    ToString();
+      virtual String    ToString(const char* format);
+      virtual String    ToString(String format);
+      virtual String    ToString(String *format);
       virtual int       Year();
     };
 
