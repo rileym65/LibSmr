@@ -2492,6 +2492,15 @@ namespace SmrFramework {
       bitSize <<= 1;
       }
     return size;
+
+//    Byte bits;
+//    bits = 0;
+//    value--;
+//    while (value != 0) {
+//      bits++;
+//      value >>= 1;
+//      }
+//    return bits;
     }
 
   char Convert::ToHexChar(Byte v) {

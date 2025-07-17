@@ -78,6 +78,7 @@ namespace SmrFramework {
     int secs;
     int hours;
     int days;
+    if (value < 0) value = -value;
     days = (int)value;
     value -= days;
     secs = (86400 * value);

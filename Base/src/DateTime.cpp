@@ -84,6 +84,46 @@ namespace SmrFramework {
     microsecond = 0;
     }
 
+  DateTime::DateTime(double jd) {
+    struct tm time;
+    double q;
+    int seconds;
+    int hours;
+    int minutes;
+    int z,w,x,a,b,c,d,e,f,day,month,year;
+    q = (jd - (int)jd) * 86400;
+    seconds = (int)q;
+    q = jd + 1;
+    z = (int)q;
+    w = (z - 1867216.25) / 36524.25;
+    x = w / 4;
+    a = z + 1 + w - x;
+    b = a + 1524;
+    c = (b - 122.1) / 365.25;
+    d = 365.25 * c;
+    e = (b - d) / 30.6001;
+    f = 30.6001 * e;
+    day = b - d - f + (q - z);
+    month = e - 1;
+    if (month > 12) month -= 12;
+    year = (month <= 2) ? c - 4715 : c - 4716;
+    hours = seconds / 3600;
+    seconds -= (hours * 3600);
+    minutes = seconds / 60;
+    seconds -= (minutes * 60);
+    time.tm_hour = hours;
+    time.tm_min = minutes;
+    time.tm_sec = seconds;
+    time.tm_mon = month - 1;
+    time.tm_mday = day;
+    time.tm_year = year - 1900;
+    time.tm_isdst = -1;
+    epochSeconds = mktime(&time);
+    timeMode = 'L';
+    setupTime();
+    microsecond = 0;
+    }
+
   DateTime::DateTime(int mo,int dy,int yr,int hr,int mn,int sc,int ms) {
     struct tm time;
     time.tm_hour = hr;
@@ -584,6 +624,244 @@ namespace SmrFramework {
     d1 = ToJulianDay();
     d2 = JulianDay(1, 1, year);
     return d1-d2;
+    }
+
+  String DateTime::ToString(const char* format) {
+    int i;
+    char buffer[1024];
+    char tmp[16];
+    int  pos;
+    pos = 0;
+    while (*format != 0) {
+      if (*format == 'd' && *(format+1) == 'o' && *(format+2) == 'w' &&
+          *(format+3) == 'l') {
+        format += 4;
+        switch(DayOfWeek()) {
+          case 0: strcpy(tmp, "Monday"); break;
+          case 1: strcpy(tmp, "Tuesday"); break;
+          case 2: strcpy(tmp, "Wednesday"); break;
+          case 3: strcpy(tmp, "Thursday"); break;
+          case 4: strcpy(tmp, "Friday"); break;
+          case 5: strcpy(tmp, "Saturday"); break;
+          case 6: strcpy(tmp, "Sunday"); break;
+          }
+        }
+      else if (*format == 'D' && *(format+1) == 'O' && *(format+2) == 'W' &&
+               *(format+3) == 'L') {
+        format += 4;
+        switch(DayOfWeek()) {
+          case 0: strcpy(tmp, "MONDAY"); break;
+          case 1: strcpy(tmp, "TUESDAY"); break;
+          case 2: strcpy(tmp, "WEDNESDAY"); break;
+          case 3: strcpy(tmp, "THURSDAY"); break;
+          case 4: strcpy(tmp, "FRIDAY"); break;
+          case 5: strcpy(tmp, "SATURDAY"); break;
+          case 6: strcpy(tmp, "SUNDAY"); break;
+          }
+        }
+      else if (*format == 'd' && *(format+1) == 'o' && *(format+2) == 'w') {
+        format += 3;
+        switch(DayOfWeek()) {
+          case 0: strcpy(tmp, "Mon"); break;
+          case 1: strcpy(tmp, "Tue"); break;
+          case 2: strcpy(tmp, "Wed"); break;
+          case 3: strcpy(tmp, "Thu"); break;
+          case 4: strcpy(tmp, "Fri"); break;
+          case 5: strcpy(tmp, "Sat"); break;
+          case 6: strcpy(tmp, "Sun"); break;
+          }
+        }
+      else if (*format == 'D' && *(format+1) == 'O' && *(format+2) == 'W') {
+        format += 3;
+        switch(DayOfWeek()) {
+          case 0: strcpy(tmp, "MON"); break;
+          case 1: strcpy(tmp, "TUE"); break;
+          case 2: strcpy(tmp, "WED"); break;
+          case 3: strcpy(tmp, "THU"); break;
+          case 4: strcpy(tmp, "FRI"); break;
+          case 5: strcpy(tmp, "SAT"); break;
+          case 6: strcpy(tmp, "SUN"); break;
+          }
+        }
+      else if (*format == 'd' && *(format+1) == 'w') {
+        format += 2;
+        switch(DayOfWeek()) {
+          case 0: strcpy(tmp, "Mo"); break;
+          case 1: strcpy(tmp, "Tu"); break;
+          case 2: strcpy(tmp, "We"); break;
+          case 3: strcpy(tmp, "Th"); break;
+          case 4: strcpy(tmp, "Fr"); break;
+          case 5: strcpy(tmp, "Sa"); break;
+          case 6: strcpy(tmp, "Su"); break;
+          }
+        }
+      else if (*format == 'D' && *(format+1) == 'W') {
+        format += 2;
+        switch(DayOfWeek()) {
+          case 0: strcpy(tmp, "MO"); break;
+          case 1: strcpy(tmp, "TU"); break;
+          case 2: strcpy(tmp, "WE"); break;
+          case 3: strcpy(tmp, "TH"); break;
+          case 4: strcpy(tmp, "FR"); break;
+          case 5: strcpy(tmp, "SA"); break;
+          case 6: strcpy(tmp, "SU"); break;
+          }
+        }
+      else if (*format == 'M' && *(format+1) != 'M') {
+        format += 1;
+        sprintf(tmp,"%d",month);
+        }
+      else if (*format == 'M' && *(format+1) == 'M' && *(format+2) != 'M') {
+        format += 2;
+        sprintf(tmp,"%02d",month);
+        }
+      else if (*format == 'M' && *(format+1) == 'M' && *(format+2) == 'M' &&
+               *(format+3) != 'M') {
+        format += 3;
+        switch (month) {
+          case 1: strcpy(tmp, "JAN"); break;
+          case 2: strcpy(tmp, "FEB"); break;
+          case 3: strcpy(tmp, "MAR"); break;
+          case 4: strcpy(tmp, "APR"); break;
+          case 5: strcpy(tmp, "MAY"); break;
+          case 6: strcpy(tmp, "JUN"); break;
+          case 7: strcpy(tmp, "JUL"); break;
+          case 8: strcpy(tmp, "AUG"); break;
+          case 9: strcpy(tmp, "SEP"); break;
+          case 10: strcpy(tmp, "OCT"); break;
+          case 11: strcpy(tmp, "NOV"); break;
+          case 12: strcpy(tmp, "DEC"); break;
+          }
+        }
+      else if (*format == 'm' && *(format+1) == 'm' && *(format+2) == 'm' &&
+               *(format+3) != 'm') {
+        format += 3;
+        switch (month) {
+          case 1: strcpy(tmp, "Jan"); break;
+          case 2: strcpy(tmp, "Feb"); break;
+          case 3: strcpy(tmp, "Mar"); break;
+          case 4: strcpy(tmp, "Apr"); break;
+          case 5: strcpy(tmp, "May"); break;
+          case 6: strcpy(tmp, "Jun"); break;
+          case 7: strcpy(tmp, "Jul"); break;
+          case 8: strcpy(tmp, "Aug"); break;
+          case 9: strcpy(tmp, "Sep"); break;
+          case 10: strcpy(tmp, "Oct"); break;
+          case 11: strcpy(tmp, "Nov"); break;
+          case 12: strcpy(tmp, "Ddec"); break;
+          }
+        }
+      else if (*format == 'M' && *(format+1) == 'M' && *(format+2) == 'M' &&
+               *(format+3) == 'M' && *(format+4) != 'M') {
+        format += 4;
+        switch (month) {
+          case 1: strcpy(tmp, "JANUARY"); break;
+          case 2: strcpy(tmp, "FEBRUARY"); break;
+          case 3: strcpy(tmp, "MARCH"); break;
+          case 4: strcpy(tmp, "APRIL"); break;
+          case 5: strcpy(tmp, "MAY"); break;
+          case 6: strcpy(tmp, "JUNE"); break;
+          case 7: strcpy(tmp, "JULY"); break;
+          case 8: strcpy(tmp, "AUGUST"); break;
+          case 9: strcpy(tmp, "SEPTEMBER"); break;
+          case 10: strcpy(tmp, "OCTOBER"); break;
+          case 11: strcpy(tmp, "NOVEMBER"); break;
+          case 12: strcpy(tmp, "DECEMBER"); break;
+          }
+        }
+      else if (*format == 'm' && *(format+1) == 'm' && *(format+2) == 'm' &&
+               *(format+3) == 'm' && *(format+4) != 'm') {
+        format += 4;
+        switch (month) {
+          case 1: strcpy(tmp, "January"); break;
+          case 2: strcpy(tmp, "February"); break;
+          case 3: strcpy(tmp, "March"); break;
+          case 4: strcpy(tmp, "April"); break;
+          case 5: strcpy(tmp, "May"); break;
+          case 6: strcpy(tmp, "June"); break;
+          case 7: strcpy(tmp, "July"); break;
+          case 8: strcpy(tmp, "August"); break;
+          case 9: strcpy(tmp, "September"); break;
+          case 10: strcpy(tmp, "October"); break;
+          case 11: strcpy(tmp, "November"); break;
+          case 12: strcpy(tmp, "December"); break;
+          }
+        }
+      else if (*format == 'D' && *(format+1) != 'D') {
+        format += 1;
+        sprintf(tmp,"%d",day);
+        }
+      else if (*format == 'D' && *(format+1) == 'D' && *(format+2) != 'D') {
+        format += 2;
+        sprintf(tmp,"%02d",day);
+        }
+      else if (*format == 'Y' && *(format+1) == 'Y' && *(format+2) != 'Y') {
+        format += 2;
+        sprintf(tmp,"%02d",year % 100);
+        }
+      else if (*format == 'Y' && *(format+1) == 'Y' && *(format+2) == 'Y' &&
+               *(format+3) == 'Y' && *(format+4) != 'Y') {
+        format += 4;
+        sprintf(tmp,"%04d",year);
+        }
+      else if (*format == 'h' && *(format+1) != 'h') {
+        format += 1;
+        sprintf(tmp,"%d",hour);
+        }
+      else if (*format == 'h' && *(format+1) == 'h' && *(format+2) != 'h') {
+        format += 2;
+        sprintf(tmp,"%02d",hour);
+        }
+      else if (*format == 'H' && *(format+1) != 'H') {
+        format += 1;
+        sprintf(tmp,"%d",hour % 12);
+        }
+      else if (*format == 'H' && *(format+1) == 'H' && *(format+2) != 'H') {
+        format += 2;
+        sprintf(tmp,"%02d",hour % 12);
+        }
+      else if (*format == 'm' && *(format+1) != 'm') {
+        format += 1;
+        sprintf(tmp,"%d",minute);
+        }
+      else if (*format == 'm' && *(format+1) == 'm' && *(format+2) != 'm') {
+        format += 2;
+        sprintf(tmp,"%02d",minute);
+        }
+      else if (*format == 's' && *(format+1) != 's') {
+        format += 1;
+        sprintf(tmp,"%d",second);
+        }
+      else if (*format == 's' && *(format+1) == 's' && *(format+2) != 's') {
+        format += 2;
+        sprintf(tmp,"%02d",second);
+        }
+      else if (*format == 'a' && *(format+1) == 'p') {
+        format += 2;
+        if (hour >= 12) strcpy(tmp, "pm");
+          else strcpy(tmp,"am");
+        }
+      else if (*format == 'A' && *(format+1) == 'P') {
+        format += 2;
+        if (hour >= 12) strcpy(tmp, "PM");
+          else strcpy(tmp,"AM");
+        }
+      else {
+        tmp[0] = *format++;
+        tmp[1] = 0;
+        }
+      for (i=0; i<strlen(tmp); i++) buffer[pos++] = tmp[i];
+      }
+    buffer[pos] = 0;
+    return String(buffer);
+    }
+
+  String DateTime::ToString(String format) {
+    return ToString(format.AsCharArray());
+    }
+
+  String DateTime::ToString(String *format) {
+    return ToString(format->AsCharArray());
     }
 
   }
