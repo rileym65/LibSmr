@@ -178,6 +178,10 @@ namespace SmrFramework {
         dt++;
         while (*dt >= '0' && *dt <= '9') sc = (sc * 10) + (*dt++ - '0');
         }
+      if (*dt == '.') {
+        dt++;
+        while (*dt >= '0' && *dt <= '9') dt++;
+        }
       if (*dt != 0 && *dt != 'z' && *dt != 'Z')
         throw InvalidOpException(this, "Unknown Date/Time format");
       if (*dt == 'z' || *dt == 'Z') timeMode = 'U';
